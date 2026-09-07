@@ -1,7 +1,10 @@
 // web/app/lib/api/courses.ts
 // Real API client for Phase 4 Course Catalog, Recommendations & Learning Path
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  'http://localhost:5000';
 
 export type CourseDifficulty = 'FOUNDATIONAL' | 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 export type MappingStatus = 'APPROVED' | 'PENDING_REVIEW' | 'REJECTED';
