@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+dist/
+build/
+
+# Environment files (NEVER commit these)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Prisma
+api/src/generated/
+
+# Python & ML Models
+ml-service/venv/
+ml-service/models/
+ml-service/data/
+ml-service/__pycache__/
+ml-service/**/__pycache__/
+ml-service/**/*.pyc
+ml-service/.env
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+
+# Test coverage
+coverage/

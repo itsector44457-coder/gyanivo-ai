@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: gyanivo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: gyanivo123
+      POSTGRES_DB: gyanivo_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - gyanivo_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  gyanivo_postgres_data:

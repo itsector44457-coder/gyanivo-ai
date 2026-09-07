@@ -1,0 +1,979 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ======================================================
+// LEGACY MODELS (PRESERVED FOR /practice AND ADAPTIVE FLOW)
+// ======================================================
+
+// ======================================================
+// BOARD
+// ======================================================
+
+model Board {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classes SchoolClass[]
+}
+
+// ======================================================
+// SCHOOL CLASS
+// ======================================================
+
+model SchoolClass {
+  id        Int      @id @default(autoincrement())
+  name      String
+  level     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  boardId Int
+  board   Board @relation(fields: [boardId], references: [id])
+
+  subjects Subject[]
+
+  @@unique([boardId, level])
+}
+
+// ======================================================
+// SUBJECT
+// ======================================================
+
+model Subject {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classId Int
+  class   SchoolClass @relation(fields: [classId], references: [id])
+
+  chapters Chapter[]
+
+  @@unique([classId, code])
+}
+
+// ======================================================
+// CHAPTER
+// ======================================================
+
+model Chapter {
+  id        Int      @id @default(autoincrement())
+  name      String
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subjectId Int
+  subject   Subject @relation(fields: [subjectId], references: [id])
+
+  topics    Topic[]
+  questions Question[]
+
+  @@unique([subjectId, order])
+}
+
+// ======================================================
+// TOPIC
+// ======================================================
+
+model Topic {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapterId Int
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
+
+  skills    Skill[]
+  questions Question[]
+}
+
+// ======================================================
+// SKILL
+// ======================================================
+
+model Skill {
+  id          Int      @id @default(autoincrement())
+  name        String
+  code        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  topicId Int
+  topic   Topic @relation(fields: [topicId], references: [id])
+
+  questions QuestionSkill[]
+  mastery   StudentSkillMastery[]
+}
+
+// ======================================================
+// QUESTION
+// ======================================================
+
+model Question {
+  id           Int    @id @default(autoincrement())
+  text         String
+  difficulty   Int
+  questionType String @default("STEP_BASED")
+
+  expectedAnswer String?
+  expectedSteps  Json?
+  commonMistakes Json?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapterId Int
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
+
+  topicId Int
+  topic   Topic @relation(fields: [topicId], references: [id])
+
+  skills   QuestionSkill[]
+  hints    Hint[]
+  attempts Attempt[]
+}
+
+// ======================================================
+// QUESTION ↔ SKILL
+// ======================================================
+
+model QuestionSkill {
+  id     Int   @id @default(autoincrement())
+  weight Float @default(1)
+
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+
+  skillId Int
+  skill   Skill @relation(fields: [skillId], references: [id])
+
+  @@unique([questionId, skillId])
+}
+
+// ======================================================
+// HINT
+// ======================================================
+
+model Hint {
+  id    Int    @id @default(autoincrement())
+  text  String
+  level Int
+
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+
+  @@unique([questionId, level])
+}
+
+// ======================================================
+// STUDENT
+// ======================================================
+
+model Student {
+  id         Int     @id @default(autoincrement())
+  name       String
+  email      String? @unique
+  classLevel Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attempts Attempt[]
+  mastery  StudentSkillMastery[]
+}
+
+// ======================================================
+// ATTEMPT
+// ======================================================
+
+model Attempt {
+  id     Int    @id @default(autoincrement())
+  status String @default("IN_PROGRESS")
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+
+  steps AttemptStep[]
+}
+
+// ======================================================
+// ATTEMPT STEP
+// ======================================================
+
+model AttemptStep {
+  id Int @id @default(autoincrement())
+
+  stepNumber  Int
+  studentStep String
+
+  isCorrect   Boolean
+  mistakeType String?
+
+  skillCode String?
+
+  attemptNumber Int     @default(1)
+  hintUsed      Boolean @default(false)
+  timeTakenSec  Int?
+
+  createdAt DateTime @default(now())
+
+  attemptId Int
+  attempt   Attempt @relation(fields: [attemptId], references: [id])
+}
+
+// ======================================================
+// STUDENT SKILL MASTERY
+// ======================================================
+
+model StudentSkillMastery {
+  id Int @id @default(autoincrement())
+
+  mastery Float @default(50)
+
+  attempts  Int @default(0)
+  correct   Int @default(0)
+  incorrect Int @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+
+  skillId Int
+  skill   Skill @relation(fields: [skillId], references: [id])
+
+  @@unique([studentId, skillId])
+}
+
+// ======================================================
+// ENTERPRISE SIH26101 CORE MODELS (PHASE 1)
+// ======================================================
+
+enum SystemRole {
+  EMPLOYEE
+  TRAINER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum CompetencyHistorySourceType {
+  DIAGNOSTIC_ASSESSMENT
+  TRAINING_ASSESSMENT
+  MANUAL_APPROVED_ADJUSTMENT
+  MIGRATION
+  SYSTEM_RECALCULATION
+}
+
+// ======================================================
+// 1. USER
+// ======================================================
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  systemRole   SystemRole @default(EMPLOYEE)
+  status       UserStatus @default(ACTIVE)
+
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  profile                EmployeeProfile?
+  sessions               AuthSession[]
+  createdAssessments     Assessment[]
+  approvedCourseMappings CourseCompetency[]
+
+  @@index([email])
+  @@index([systemRole])
+}
+
+// ======================================================
+// 2. EMPLOYEE PROFILE
+// ======================================================
+
+model EmployeeProfile {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  employeeCode             String? @unique
+  designation              String
+  cadre                    String? // e.g. "SSS Cadre", "ISS Cadre", "Technical"
+  currentAssignment        String?
+  educationalQualification String?
+  experienceYears          Float   @default(0)
+
+  departmentId Int?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  jobRoleId Int?
+  jobRole   JobRole? @relation(fields: [jobRoleId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  competencies       EmployeeCompetency[]
+  competencyHistory  CompetencyHistory[]
+  assessmentAttempts AssessmentAttempt[]
+  recommendations    CourseRecommendation[]
+  enrollments        TrainingEnrollment[]
+
+  @@index([departmentId])
+  @@index([jobRoleId])
+}
+
+// ======================================================
+// 3. DEPARTMENT
+// ======================================================
+
+model Department {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique // e.g. "NSO", "FOD", "SDRD", "ESD", "CPD"
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  employees EmployeeProfile[]
+  jobRoles  JobRole[]
+}
+
+// ======================================================
+// 4. JOB ROLE
+// ======================================================
+
+model JobRole {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique // e.g. "STAT_OFFICER", "SR_STAT_OFFICER", "DATA_ANALYST"
+  name        String
+  description String?
+  level       Int? // Cadre hierarchy level
+  isActive    Boolean @default(true)
+
+  departmentId Int?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  employees    EmployeeProfile[]
+  requirements RoleCompetencyRequirement[]
+
+  @@index([departmentId])
+}
+
+// ======================================================
+// 5. COMPETENCY DOMAIN
+// ======================================================
+
+model CompetencyDomain {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique // e.g. "STATISTICAL", "TECHNICAL", "DIGITAL_GOVERNANCE", "BEHAVIOURAL_MANAGERIAL"
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  competencies Competency[]
+}
+
+// ======================================================
+// 6. COMPETENCY
+// ======================================================
+
+model Competency {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique // e.g. "TECH_PYTHON", "STAT_SAMPLING", "TECH_GIS"
+  name        String
+  description String?
+
+  domainId Int
+  domain   CompetencyDomain @relation(fields: [domainId], references: [id], onDelete: Restrict)
+
+  parentCompetencyId Int?
+  parentCompetency   Competency?  @relation("CompetencyHierarchy", fields: [parentCompetencyId], references: [id], onDelete: SetNull)
+  childCompetencies  Competency[] @relation("CompetencyHierarchy")
+
+  proficiencyScaleMin Int     @default(1)
+  proficiencyScaleMax Int     @default(100)
+  isActive            Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roleRequirements     RoleCompetencyRequirement[]
+  employeeCompetencies EmployeeCompetency[]
+  historyRecords       CompetencyHistory[]
+  assessments          Assessment[]
+  questionBank         AssessmentQuestionBankItem[]
+  assessmentAttempts   AssessmentAttempt[]
+  courseMappings       CourseCompetency[]
+  prerequisites        CoursePrerequisite[]
+  recommendations      CourseRecommendation[]
+
+  @@index([domainId])
+  @@index([parentCompetencyId])
+}
+
+// ======================================================
+// 7. ROLE COMPETENCY REQUIREMENT (MATRIX)
+// ======================================================
+
+model RoleCompetencyRequirement {
+  id Int @id @default(autoincrement())
+
+  jobRoleId Int
+  jobRole   JobRole @relation(fields: [jobRoleId], references: [id], onDelete: Cascade)
+
+  competencyId Int
+  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  requiredScore   Float // Benchmark target score (0-100)
+  priorityWeight  Float     @default(1.0)
+  isMandatory     Boolean   @default(true)
+  minimumScore    Float? // Absolute minimum score threshold
+  sourceReference String? // e.g. "NSSTA 2026 Cadre Directive"
+  approvedAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([jobRoleId, competencyId])
+  @@index([jobRoleId])
+  @@index([competencyId])
+}
+
+// ======================================================
+// 8. EMPLOYEE COMPETENCY (CURRENT SCORE)
+// ======================================================
+
+model EmployeeCompetency {
+  id Int @id @default(autoincrement())
+
+  employeeProfileId Int
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  competencyId Int
+  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  currentScore    Float     @default(0) // 0-100 proficiency score
+  confidence      Float     @default(0.5) // Statistical confidence (0-1)
+  evidenceCount   Int       @default(0)
+  lastEvaluatedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([employeeProfileId, competencyId])
+  @@index([employeeProfileId])
+  @@index([competencyId])
+}
+
+// ======================================================
+// 9. COMPETENCY HISTORY (AUDITABLE PROGRESSION LOG)
+// ======================================================
+
+model CompetencyHistory {
+  id Int @id @default(autoincrement())
+
+  employeeProfileId Int
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  competencyId Int
+  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  previousScore Float
+  newScore      Float
+  confidence    Float                       @default(0.5)
+  changeReason  String?
+  sourceType    CompetencyHistorySourceType @default(DIAGNOSTIC_ASSESSMENT)
+  sourceId      String? // ID of assessment attempt or evaluation record
+
+  createdAt DateTime @default(now())
+
+  @@index([employeeProfileId])
+  @@index([competencyId])
+  @@index([createdAt])
+}
+
+// ======================================================
+// 10. AUTH SESSION (REFRESH TOKEN PERSISTENCE)
+// ======================================================
+
+model AuthSession {
+  id     String @id @default(uuid())
+  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  refreshTokenHash String
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  lastUsedAt       DateTime?
+  userAgent        String?
+  ipAddress        String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([refreshTokenHash])
+}
+
+// ======================================================
+// ENTERPRISE PHASE 3 ASSESSMENT ENUMS
+// ======================================================
+
+enum AssessmentType {
+  DIAGNOSTIC
+  TRAINING
+  POST_TRAINING
+  PRACTICE
+}
+
+enum AssessmentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+  EXPIRED
+}
+
+// ======================================================
+// 11. ASSESSMENT (TEST/SESSION DEFINITION)
+// ======================================================
+
+model Assessment {
+  id          Int              @id @default(autoincrement())
+  title       String
+  description String?
+  type        AssessmentType   @default(DIAGNOSTIC)
+  status      AssessmentStatus @default(PUBLISHED)
+
+  competencyId Int?
+  competency   Competency? @relation(fields: [competencyId], references: [id], onDelete: SetNull)
+
+  createdByUserId Int?
+  createdByUser   User? @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  timeLimitMinutes Int? // Optional timer
+  questionCount    Int     @default(10)
+  passingScore     Float? // Benchmark percentage threshold
+  adaptiveEnabled  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attempts AssessmentAttempt[]
+
+  @@index([competencyId])
+  @@index([type])
+  @@index([status])
+}
+
+// ======================================================
+// 12. ASSESSMENT QUESTION BANK ITEM (COMPETENCY MCQ BANK)
+// ======================================================
+
+model AssessmentQuestionBankItem {
+  id Int @id @default(autoincrement())
+
+  competencyId Int
+  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  questionText    String
+  questionType    String             @default("MCQ")
+  difficulty      QuestionDifficulty @default(MEDIUM)
+  options         Json // [{ "id": "A", "text": "..." }, { "id": "B", "text": "..." }]
+  correctOption   String // "A", "B", "C", or "D" (server-side only)
+  explanation     String
+  sourceType      String             @default("CURATED_FRAMEWORK")
+  sourceReference String? // e.g. "MoSPI Sampling Handbook 2026"
+  isActive        Boolean            @default(true)
+  isVerified      Boolean            @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  answerAttempts AssessmentAnswerAttempt[]
+
+  @@index([competencyId])
+  @@index([difficulty])
+  @@index([isActive])
+}
+
+// ======================================================
+// 13. ASSESSMENT ATTEMPT (SESSION INSTANCE)
+// ======================================================
+
+model AssessmentAttempt {
+  id Int @id @default(autoincrement())
+
+  assessmentId Int?
+  assessment   Assessment? @relation(fields: [assessmentId], references: [id], onDelete: SetNull)
+
+  employeeProfileId Int
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  competencyId Int
+  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  status      AttemptStatus @default(IN_PROGRESS)
+  startedAt   DateTime      @default(now())
+  completedAt DateTime?
+
+  currentQuestionIndex Int                @default(0)
+  currentDifficulty    QuestionDifficulty @default(MEDIUM)
+  totalQuestions       Int                @default(10)
+  correctAnswers       Int                @default(0)
+  rawScore             Float              @default(0.0) // Percentage 0-100
+
+  initialCompetencyScore Float? // Score before diagnostic attempt
+  finalCompetencyScore   Float? // Score after diagnostic attempt
+  durationSeconds        Int? // Total time spent
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  answers AssessmentAnswerAttempt[]
+
+  @@index([employeeProfileId])
+  @@index([competencyId])
+  @@index([status])
+}
+
+// ======================================================
+// 14. ASSESSMENT ANSWER ATTEMPT (GRANULAR STEP EVIDENCE)
+// ======================================================
+
+model AssessmentAnswerAttempt {
+  id Int @id @default(autoincrement())
+
+  assessmentAttemptId Int
+  assessmentAttempt   AssessmentAttempt @relation(fields: [assessmentAttemptId], references: [id], onDelete: Cascade)
+
+  questionId Int
+  question   AssessmentQuestionBankItem @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  selectedOption         String
+  isCorrect              Boolean
+  difficulty             QuestionDifficulty
+  responseTimeMs         Int? // millisecond precision for future ML
+  attemptSequence        Int // 1, 2, 3...
+  estimatedMasteryBefore Float?
+  estimatedMasteryAfter  Float?
+
+  answeredAt DateTime @default(now())
+
+  @@index([assessmentAttemptId])
+  @@index([questionId])
+}
+
+// ======================================================
+// ENTERPRISE PHASE 4 COURSE CATALOG & INTEGRATION ENUMS
+// ======================================================
+
+enum ProviderStatus {
+  ACTIVE
+  INACTIVE
+  NOT_CONFIGURED
+  ERROR
+}
+
+enum CourseDifficulty {
+  FOUNDATIONAL
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum DifficultySource {
+  PROVIDER_METADATA
+  AI_ESTIMATED
+  MANUAL
+}
+
+enum MappingMethod {
+  SEMANTIC
+  PROVIDER_METADATA
+  LLM_ASSISTED
+  HUMAN_OVERRIDE
+}
+
+enum MappingStatus {
+  APPROVED
+  PENDING_REVIEW
+  REJECTED
+}
+
+enum SyncStatus {
+  SUCCESS
+  PARTIAL
+  FAILED
+}
+
+enum EnrollmentStatus {
+  ENROLLED
+  IN_PROGRESS
+  COMPLETED
+  DROPPED
+}
+
+enum EnrollmentSource {
+  LOCAL_PLATFORM_EVENT
+  OFFICIAL_PROVIDER_SYNC
+}
+
+// ======================================================
+// 15. COURSE PROVIDER (iGOT, NSSTA, LOCAL DEV)
+// ======================================================
+
+model CourseProvider {
+  id           Int            @id @default(autoincrement())
+  code         String         @unique // e.g. "IGOT", "NSSTA", "LOCAL_DEV"
+  name         String // e.g. "iGOT Karmayogi", "NSSTA Training Academy"
+  providerType String         @default("EXTERNAL_PLATFORM") // "OFFICIAL_GOVERNMENT", "ACADEMY", "LOCAL"
+  baseUrl      String?
+  status       ProviderStatus @default(ACTIVE)
+  capabilities Json? // e.g. { "catalogRead": true, "authenticatedCatalogSync": false, "enrollmentRead": false, "completionRead": false }
+  lastSyncAt   DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  courses  Course[]
+  syncRuns CourseSyncRun[]
+
+  @@index([code])
+  @@index([status])
+}
+
+// ======================================================
+// 16. COURSE (NORMALIZED TRAINING/LEARNING CATALOG)
+// ======================================================
+
+model Course {
+  id Int @id @default(autoincrement())
+
+  providerId Int
+  provider   CourseProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  externalId      String // External course ID from provider
+  title           String
+  description     String?
+  providerName    String // Display name e.g. "iGOT Karmayogi / MoSPI"
+  durationMinutes Int     @default(60)
+  language        String  @default("English")
+
+  difficultyLevel  CourseDifficulty @default(BEGINNER)
+  difficultySource DifficultySource @default(PROVIDER_METADATA)
+
+  courseUrl         String?
+  thumbnailUrl      String?
+  learningOutcomes  Json? // Array of outcome bullet points
+  tags              Json? // Array of domain/topic tags
+  prerequisitesText String?
+
+  isActive        Boolean   @default(true)
+  sourceUpdatedAt DateTime?
+  lastSyncedAt    DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  competencyMappings CourseCompetency[]
+  prerequisites      CoursePrerequisite[]   @relation("CoursePrerequisites")
+  requiredByCourses  CoursePrerequisite[]   @relation("PrerequisiteCourse")
+  recommendations    CourseRecommendation[]
+  enrollments        TrainingEnrollment[]
+
+  @@unique([providerId, externalId])
+  @@index([providerId])
+  @@index([difficultyLevel])
+  @@index([isActive])
+}
+
+// ======================================================
+// 17. COURSE COMPETENCY (AUTOMATIC & REVIEWABLE MAPPINGS)
+// ======================================================
+
+model CourseCompetency {
+  id Int @id @default(autoincrement())
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  competencyId Int
+  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  relevanceScore     Float // Cosine similarity or relevance (0.0 - 1.0)
+  mappingMethod      MappingMethod @default(SEMANTIC)
+  mappingReliability Float         @default(0.8) // Confidence metric (0.0 - 1.0)
+  evidence           String? // Why it matched (e.g. matched keywords / cosine details)
+  status             MappingStatus @default(APPROVED)
+
+  approvedByUserId Int?
+  approvedByUser   User?     @relation(fields: [approvedByUserId], references: [id], onDelete: SetNull)
+  approvedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseId, competencyId])
+  @@index([courseId])
+  @@index([competencyId])
+  @@index([status])
+  @@index([relevanceScore])
+}
+
+// ======================================================
+// 18. COURSE PREREQUISITE (SEQUENCING RULES)
+// ======================================================
+
+model CoursePrerequisite {
+  id Int @id @default(autoincrement())
+
+  courseId Int
+  course   Course @relation("CoursePrerequisites", fields: [courseId], references: [id], onDelete: Cascade)
+
+  prerequisiteCourseId Int?
+  prerequisiteCourse   Course? @relation("PrerequisiteCourse", fields: [prerequisiteCourseId], references: [id], onDelete: SetNull)
+
+  prerequisiteCompetencyId Int?
+  prerequisiteCompetency   Competency? @relation(fields: [prerequisiteCompetencyId], references: [id], onDelete: SetNull)
+
+  minimumCompetencyScore Float? // e.g. Requires 50+ in TECH_PYTHON before this course
+
+  createdAt DateTime @default(now())
+
+  @@index([courseId])
+  @@index([prerequisiteCourseId])
+  @@index([prerequisiteCompetencyId])
+}
+
+// ======================================================
+// 19. COURSE SYNC RUN (TRACEABLE PROVIDER AUDIT LOG)
+// ======================================================
+
+model CourseSyncRun {
+  id Int @id @default(autoincrement())
+
+  providerId Int
+  provider   CourseProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  startedAt   DateTime   @default(now())
+  completedAt DateTime?
+  status      SyncStatus @default(SUCCESS)
+
+  itemsFetched Int     @default(0)
+  itemsCreated Int     @default(0)
+  itemsUpdated Int     @default(0)
+  itemsFailed  Int     @default(0)
+  errorSummary String?
+
+  @@index([providerId])
+  @@index([startedAt])
+}
+
+// ======================================================
+// 20. COURSE RECOMMENDATION (EXPLAINABLE EVENT TRACKING)
+// ======================================================
+
+model CourseRecommendation {
+  id Int @id @default(autoincrement())
+
+  employeeProfileId Int
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  competencyId Int
+  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  recommendationScore Float // Explainable composite score (0.0 - 1.0)
+  rankingPosition     Int // 1, 2, 3...
+  reasons             Json // Array of human-readable rationale strings
+
+  preCompetencyScore  Float? // Score when recommended
+  postCompetencyScore Float? // Score after completion
+  outcomeImprovement  Float? // Delta improvement (for future ML supervised ranking)
+
+  recommendedAt DateTime  @default(now())
+  acceptedAt    DateTime?
+  startedAt     DateTime?
+  completedAt   DateTime?
+
+  @@index([employeeProfileId])
+  @@index([courseId])
+  @@index([competencyId])
+  @@index([recommendedAt])
+}
+
+// ======================================================
+// 21. TRAINING ENROLLMENT (LOCAL & SYNCED PROGRESS)
+// ======================================================
+
+model TrainingEnrollment {
+  id Int @id @default(autoincrement())
+
+  employeeProfileId Int
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  status           EnrollmentStatus @default(ENROLLED)
+  completionSource EnrollmentSource @default(LOCAL_PLATFORM_EVENT)
+
+  progressPercent Float  @default(0.0)
+  score           Float?
+
+  enrolledAt  DateTime  @default(now())
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([employeeProfileId, courseId])
+  @@index([employeeProfileId])
+  @@index([courseId])
+  @@index([status])
+}
