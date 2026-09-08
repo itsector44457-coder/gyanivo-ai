@@ -22,6 +22,9 @@ async function bootstrap() {
     // Allow all Vercel preview & production deployments
     /^https:\/\/.*\.vercel\.app$/,
     /^https:\/\/gyanivo.*\.vercel\.app$/,
+    // Allow all Render preview & production deployments
+    /^https:\/\/.*\.onrender\.com$/,
+    /^https:\/\/gyanivo.*\.onrender\.com$/,
   ].filter(Boolean);
 
   app.enableCors({
@@ -30,11 +33,16 @@ async function bootstrap() {
         // Allow server-to-server requests
         return callback(null, true);
       }
-      const isAllowed = allowedOrigins.some((allowed) => {
-        if (allowed instanceof RegExp) return allowed.test(origin);
-        return allowed === origin;
-      });
-      callback(null, isAllowed || process.env.NODE_ENV !== 'production');
+      const isAllowed =
+        allowedOrigins.some((allowed) => {
+          if (allowed instanceof RegExp) return allowed.test(origin);
+          return allowed === origin;
+        }) ||
+        origin.endsWith('.onrender.com') ||
+        origin.endsWith('.vercel.app') ||
+        origin.includes('localhost');
+
+      callback(null, isAllowed);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
