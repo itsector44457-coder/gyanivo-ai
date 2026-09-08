@@ -1780,6 +1780,46 @@ async function seedEnterpriseFoundation() {
     },
   });
 
+  // Custom Super Admin: Krishna (kt103263@gmail.com)
+  const krishnaPasswordHash = await bcrypt.hash('Loan12345', 10);
+  const krishnaUser = await prisma.user.upsert({
+    where: { email: 'kt103263@gmail.com' },
+    update: {
+      firstName: 'Krishna',
+      lastName: 'T',
+      systemRole: 'ADMIN',
+      status: 'ACTIVE',
+      passwordHash: krishnaPasswordHash,
+    },
+    create: {
+      email: 'kt103263@gmail.com',
+      firstName: 'Krishna',
+      lastName: 'T',
+      systemRole: 'ADMIN',
+      status: 'ACTIVE',
+      passwordHash: krishnaPasswordHash,
+    },
+  });
+
+  await prisma.employeeProfile.upsert({
+    where: { userId: krishnaUser.id },
+    update: {
+      employeeCode: 'MOSPI-SYS-ADM-001',
+      designation: 'Director & Lead System Architect',
+      cadre: 'Indian Statistical Service (ISS)',
+      departmentId: deptMap.get('NSO'),
+      jobRoleId: roleMap.get('JOINT_DIRECTOR'),
+    },
+    create: {
+      userId: krishnaUser.id,
+      employeeCode: 'MOSPI-SYS-ADM-001',
+      designation: 'Director & Lead System Architect',
+      cadre: 'Indian Statistical Service (ISS)',
+      departmentId: deptMap.get('NSO'),
+      jobRoleId: roleMap.get('JOINT_DIRECTOR'),
+    },
+  });
+
   // 7. PHASE 3 DIAGNOSTIC QUESTION BANK
   console.log('📝 Seeding Diagnostic Assessment Question Bank...');
 
