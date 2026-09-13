@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Layers,
@@ -14,13 +14,31 @@ import {
   Clock,
   Trash2,
   RefreshCw,
+  BookOpen,
 } from "lucide-react";
-import { DEMO_TRAINING_MATERIALS } from "@/data/demo";
 import { Badge, PrototypeBadge } from "@/components/ui/Badge";
+import {
+  getStoredTrainingMaterials,
+  saveStoredTrainingMaterials,
+} from "@/lib/trainerStorage";
+import { TrainingMaterial } from "@/types";
 
 export default function TrainerMaterialsPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [materials, setMaterials] = useState(DEMO_TRAINING_MATERIALS);
+  const [materials, setMaterials] = useState<TrainingMaterial[]>([]);
+
+  useEffect(() => {
+    setMaterials(getStoredTrainingMaterials());
+
+    const handleUpdate = () => {
+      setMaterials(getStoredTrainingMaterials());
+    };
+
+    window.addEventListener("gyanivo_materials_updated", handleUpdate);
+    return () => {
+      window.removeEventListener("gyanivo_materials_updated", handleUpdate);
+    };
+  }, []);
 
   const filtered = materials.filter(
     (m) =>
@@ -30,8 +48,10 @@ export default function TrainerMaterialsPage() {
   );
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to remove this training document from the repository? (Demo Action)")) {
-      setMaterials((prev) => prev.filter((m) => m.id !== id));
+    if (confirm("Are you sure you want to remove this training document from the repository?")) {
+      const updated = materials.filter((m) => m.id !== id);
+      setMaterials(updated);
+      saveStoredTrainingMaterials(updated);
     }
   };
 
@@ -47,7 +67,7 @@ export default function TrainerMaterialsPage() {
             <PrototypeBadge />
           </div>
           <p className="text-xs text-slate-600 mt-1">
-            Repository of NSSTA curricula, survey guidelines, and official technical manuals
+            Repository of NSSTA curricula, survey guidelines, and official technical manuals processed by the AI pipeline
           </p>
         </div>
 
@@ -119,13 +139,13 @@ export default function TrainerMaterialsPage() {
                 <td className="px-5 py-4 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Link
-                      href={`/trainer/materials/${mat.id}`}
+                      href={`/trainer/question-bank?doc=${encodeURIComponent(mat.fileName)}`}
                       className="px-2 py-1 rounded bg-slate-100 font-semibold text-slate-700 hover:bg-slate-200"
                     >
-                      View
+                      Questions
                     </Link>
                     <Link
-                      href="/trainer/question-review"
+                      href={`/trainer/question-review?doc=${encodeURIComponent(mat.fileName)}`}
                       className="px-2 py-1 rounded bg-blue-700 font-bold text-white hover:bg-blue-800 shadow-2xs"
                     >
                       Review

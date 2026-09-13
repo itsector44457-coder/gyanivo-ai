@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -14,9 +14,10 @@ import {
   Clock,
   Award,
 } from "lucide-react";
-import { DEMO_REVIEW_QUESTIONS } from "@/data/demo";
 import { PrototypeBadge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
+import { getStoredTrainerQuestions } from "@/lib/trainerStorage";
+import { Question } from "@/types";
 
 export default function TrainerAssessmentBuilderPage() {
   const router = useRouter();
@@ -30,10 +31,18 @@ export default function TrainerAssessmentBuilderPage() {
   const [attempts, setAttempts] = useState(2);
   const [passPercentage, setPassPercentage] = useState(60);
 
+  // Bank questions
+  const [bankQuestions, setBankQuestions] = useState<Question[]>([]);
   // Selected questions from question bank
-  const [selectedQuestions, setSelectedQuestions] = useState(DEMO_REVIEW_QUESTIONS.slice(0, 4));
+  const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [showAddFromBankModal, setShowAddFromBankModal] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
+
+  useEffect(() => {
+    const qList = getStoredTrainerQuestions();
+    setBankQuestions(qList);
+    setSelectedQuestions(qList.slice(0, 4));
+  }, []);
 
   const handleRemoveQuestion = (id: string) => {
     setSelectedQuestions((prev) => prev.filter((q) => q.id !== id));
@@ -247,7 +256,7 @@ export default function TrainerAssessmentBuilderPage() {
         subtitle="Select certified items from official training documents"
       >
         <div className="space-y-3 text-xs">
-          {DEMO_REVIEW_QUESTIONS.map((q) => (
+          {bankQuestions.map((q) => (
             <div
               key={q.id}
               className="p-3 rounded-lg border border-slate-200 bg-slate-50 flex items-start justify-between gap-2"

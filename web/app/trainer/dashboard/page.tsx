@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Layers,
@@ -15,12 +15,34 @@ import {
   BarChart3,
   Sliders,
 } from "lucide-react";
-import { DEMO_TRAINING_MATERIALS, DEMO_REVIEW_QUESTIONS } from "@/data/demo";
 import { PrototypeBadge } from "@/components/ui/Badge";
+import {
+  getStoredTrainerQuestions,
+  getStoredTrainingMaterials,
+} from "@/lib/trainerStorage";
+import { Question, TrainingMaterial } from "@/types";
 
 export default function TrainerDashboardPage() {
-  const pendingReviewCount = DEMO_REVIEW_QUESTIONS.filter(
-    (q) => q.status === "PENDING_REVIEW"
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [materials, setMaterials] = useState<TrainingMaterial[]>([]);
+
+  useEffect(() => {
+    setQuestions(getStoredTrainerQuestions());
+    setMaterials(getStoredTrainingMaterials());
+
+    const handleQ = () => setQuestions(getStoredTrainerQuestions());
+    const handleM = () => setMaterials(getStoredTrainingMaterials());
+
+    window.addEventListener("gyanivo_questions_updated", handleQ);
+    window.addEventListener("gyanivo_materials_updated", handleM);
+    return () => {
+      window.removeEventListener("gyanivo_questions_updated", handleQ);
+      window.removeEventListener("gyanivo_materials_updated", handleM);
+    };
+  }, []);
+
+  const pendingReviewCount = questions.filter(
+    (q: Question) => q.status === "PENDING_REVIEW"
   ).length;
 
   const workflowSteps = [
@@ -155,12 +177,12 @@ export default function TrainerDashboardPage() {
               href="/trainer/materials"
               className="text-xs font-semibold text-blue-700 hover:text-blue-900"
             >
-              View All (14) →
+              View All ({materials.length}) →
             </Link>
           </div>
 
           <div className="divide-y divide-slate-100">
-            {DEMO_TRAINING_MATERIALS.slice(0, 3).map((mat) => (
+            {materials.slice(0, 3).map((mat: TrainingMaterial) => (
               <div key={mat.id} className="py-3 flex items-start justify-between gap-3">
                 <div>
                   <h3 className="text-xs font-bold text-slate-900 leading-snug">
@@ -193,9 +215,10 @@ export default function TrainerDashboardPage() {
           </div>
 
           <div className="space-y-3">
-            {DEMO_REVIEW_QUESTIONS.filter((q) => q.status === "PENDING_REVIEW")
-              .slice(0, 2)
-              .map((q) => (
+            {questions
+              .filter((q: Question) => q.status === "PENDING_REVIEW")
+              .slice(0, 3)
+              .map((q: Question) => (
                 <div
                   key={q.id}
                   className="p-3 rounded-lg border border-amber-200 bg-amber-50/40 space-y-2"
