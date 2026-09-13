@@ -27,6 +27,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  Bot,
+  Cpu,
 } from "lucide-react";
 import { UserRole } from "@/types";
 import { useAuth } from "@/lib/auth/AuthContext";
@@ -57,6 +59,7 @@ export function Sidebar({
 
   const employeeLinks = [
     { href: "/employee/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/copilot", label: "Sketu AI Copilot", icon: Bot, badge: "AI" },
     { href: "/employee/competencies", label: "Competency Index", icon: Award },
     { href: "/employee/skill-gaps", label: "Skill Gap Analysis", icon: AlertTriangle, badge: "Gaps" },
     { href: "/employee/learning-path", label: "Adaptive Path", icon: Compass },
@@ -68,9 +71,12 @@ export function Sidebar({
 
   const trainerLinks = [
     { href: "/trainer/dashboard", label: "Trainer Hub", icon: LayoutDashboard },
+    { href: "/copilot", label: "Cadre AI Copilot", icon: Bot, badge: "RAG" },
     { href: "/trainer/materials", label: "Training Materials", icon: Upload },
+    { href: "/trainer/materials/upload", label: "500p Ingestion Pipeline", icon: Cpu, badge: "AI" },
     { href: "/trainer/question-review", label: "Question Verification", icon: FileSpreadsheet, badge: "Review" },
     { href: "/trainer/question-bank", label: "Question Repository", icon: Layers },
+    { href: "/ai-engine", label: "Psychometrics Lab", icon: Cpu, badge: "CAT" },
     { href: "/trainer/assessments", label: "Assessment Schemes", icon: FileCheck2 },
     { href: "/trainer/assessment-builder", label: "Assessment Assembler", icon: Sliders },
     { href: "/trainer/analytics", label: "Cadre Performance", icon: BarChart3 },
@@ -78,6 +84,8 @@ export function Sidebar({
 
   const adminLinks = [
     { href: "/admin/dashboard", label: "Command Centre", icon: LayoutDashboard },
+    { href: "/copilot", label: "Cadre AI Copilot", icon: Bot, badge: "AI" },
+    { href: "/ai-engine", label: "AI Psychometrics", icon: Cpu, badge: "Lab" },
     { href: "/admin/employees", label: "Cadre Directory", icon: Users },
     { href: "/admin/departments", label: "Divisions & Units", icon: Building2 },
     { href: "/admin/job-roles", label: "Cadre Roles", icon: Briefcase },
