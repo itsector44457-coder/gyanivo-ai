@@ -3,7 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "./lib/auth/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Gyanivo AI — MoSPI Competency Intelligence & Learning Platform",
+  title: "Sketu AI — MoSPI Competency Intelligence & Learning Platform",
   description:
     "AI-enabled Competency Intelligence, Adaptive Skill-Gap Analytics and Learning Platform for India's Official Statistical System (MoSPI). Problem Statement SIH26101.",
 };

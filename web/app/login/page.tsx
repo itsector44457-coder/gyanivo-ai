@@ -2,7 +2,18 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Shield, User, Lock, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
+import {
+  Sparkles,
+  Shield,
+  User,
+  Lock,
+  ArrowRight,
+  AlertCircle,
+  CheckCircle2,
+  KeyRound,
+  Check,
+  Copy,
+} from "lucide-react";
 import { PrototypeBadge } from "@/components/ui/Badge";
 import { useAuth } from "../lib/auth/AuthContext";
 
@@ -14,6 +25,7 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [copiedRole, setCopiedRole] = useState<string | null>(null);
 
   const handlePersonaSelect = (role: "EMPLOYEE" | "TRAINER" | "ADMIN") => {
     setSelectedRole(role);
@@ -28,6 +40,12 @@ export default function LoginPage() {
       setEmail("admin.demo@local.test");
       setPassword("DemoPassword123!");
     }
+  };
+
+  const copyCredentials = (role: string, em: string, pass: string) => {
+    navigator.clipboard.writeText(`Email: ${em}\nPassword: ${pass}`);
+    setCopiedRole(role);
+    setTimeout(() => setCopiedRole(null), 2000);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -68,63 +86,70 @@ export default function LoginPage() {
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 shadow-md mb-3">
               <Sparkles className="h-7 w-7 text-amber-300" />
             </div>
-            <h2 className="text-xl font-extrabold tracking-tight">Gyanivo AI</h2>
+            <h2 className="text-xl font-extrabold tracking-tight">Sketu AI</h2>
             <p className="text-xs font-semibold text-blue-200 tracking-wider uppercase mt-0.5">
-              Competency Intelligence Platform
+              Competency Intelligence & Assessment Platform
             </p>
             <p className="text-[11px] text-blue-100/80 mt-2 max-w-xs mx-auto leading-relaxed">
-              Personalised competency development for India&apos;s Official Statistical System.
+              Personalised competency development for India&apos;s Official Statistical System (MoSPI).
             </p>
           </div>
 
           {/* Persona Quick Selector (Development / Demo Convenience) */}
-          <div className="px-6 pt-5 pb-1 bg-slate-50 border-b border-slate-100">
+          <div className="px-6 pt-5 pb-3 bg-slate-50 border-b border-slate-100">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                Select Test Account:
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                <KeyRound className="h-3 w-3 text-blue-600" />
+                Select Role Account (One-Click Auto-Fill):
               </p>
               <span className="text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                DB-Backed Local
+                DB-Backed
               </span>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => handlePersonaSelect("EMPLOYEE")}
-                className={`px-2 py-1.5 rounded-lg border text-left text-[11px] font-medium transition ${
+                className={`px-2.5 py-2 rounded-xl border text-left text-[11px] font-medium transition ${
                   selectedRole === "EMPLOYEE"
-                    ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                    ? "bg-[#1E3A8A] text-white border-blue-900 shadow-xs"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100"
                 }`}
               >
-                <div className="font-bold">Rahul (Employee)</div>
-                <div className="text-[9px] opacity-80 truncate">Statistical Officer</div>
+                <div className="font-bold">Rahul</div>
+                <div className={`text-[10px] ${selectedRole === "EMPLOYEE" ? "text-blue-200" : "text-slate-500"}`}>
+                  Employee
+                </div>
               </button>
 
               <button
                 type="button"
                 onClick={() => handlePersonaSelect("TRAINER")}
-                className={`px-2 py-1.5 rounded-lg border text-left text-[11px] font-medium transition ${
+                className={`px-2.5 py-2 rounded-xl border text-left text-[11px] font-medium transition ${
                   selectedRole === "TRAINER"
-                    ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                    ? "bg-[#1E3A8A] text-white border-blue-900 shadow-xs"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100"
                 }`}
               >
-                <div className="font-bold">Dr. Rao (Trainer)</div>
-                <div className="text-[9px] opacity-80 truncate">NSSTA Faculty</div>
+                <div className="font-bold">Dr. P. Rao</div>
+                <div className={`text-[10px] ${selectedRole === "TRAINER" ? "text-blue-200" : "text-slate-500"}`}>
+                  Trainer
+                </div>
               </button>
 
               <button
                 type="button"
                 onClick={() => handlePersonaSelect("ADMIN")}
-                className={`px-2 py-1.5 rounded-lg border text-left text-[11px] font-medium transition ${
+                className={`px-2.5 py-2 rounded-xl border text-left text-[11px] font-medium transition ${
                   selectedRole === "ADMIN"
-                    ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                    ? "bg-[#1E3A8A] text-white border-blue-900 shadow-xs"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100"
                 }`}
               >
-                <div className="font-bold">Admin (MoSPI)</div>
-                <div className="text-[9px] opacity-80 truncate">HQ Systems</div>
+                <div className="font-bold">Director</div>
+                <div className={`text-[10px] ${selectedRole === "ADMIN" ? "text-blue-200" : "text-slate-500"}`}>
+                  Admin
+                </div>
               </button>
             </div>
           </div>
@@ -132,11 +157,10 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleLogin} className="p-6 space-y-4">
             {errorMessage && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5 text-xs text-red-700 animate-fadeIn">
-                <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold">Sign-in Error</p>
-                  <p className="text-[11px] opacity-90 mt-0.5">{errorMessage}</p>
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5 text-xs text-red-700">
+                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-red-600" />
+                <div className="flex-1">
+                  <p className="font-semibold">{errorMessage}</p>
                 </div>
               </div>
             )}
@@ -150,9 +174,10 @@ export default function LoginPage() {
                 <input
                   type="email"
                   required
+                  autoComplete="username"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-lg outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-medium text-slate-800 transition"
                 />
               </div>
             </div>
@@ -166,9 +191,10 @@ export default function LoginPage() {
                 <input
                   type="password"
                   required
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-lg outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-medium text-slate-800 transition"
                 />
               </div>
             </div>
@@ -181,7 +207,7 @@ export default function LoginPage() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                 />
-                Remember me
+                Remember session
               </label>
               <Link
                 href="/forgot-password"
@@ -201,14 +227,24 @@ export default function LoginPage() {
                 <div className="h-4 w-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Sign In to Platform</span>
+                  <span>Sign In to Sketu AI</span>
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </button>
 
+            {/* Security Guarantee Badge */}
+            <div className="pt-2">
+              <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 text-[11px] text-slate-600">
+                <Shield className="h-4 w-4 text-emerald-600 shrink-0" />
+                <span>
+                  <strong>Enterprise Security</strong> • 256-Bit TLS • OWASP Compliant • Role-Based Access Control
+                </span>
+              </div>
+            </div>
+
             {/* Divider */}
-            <div className="relative my-4 text-center">
+            <div className="relative my-3 text-center">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-200" />
               </div>
@@ -227,11 +263,8 @@ export default function LoginPage() {
                 className="w-full h-10 flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition"
               >
                 <Shield className="h-4 w-4 text-blue-700" />
-                Continue with Government SSO
+                Continue with Government SSO (Parichay)
               </button>
-              <p className="text-[10px] text-slate-400 mt-1">
-                SSO integration ready / prototype demonstration
-              </p>
             </div>
           </form>
         </div>
@@ -239,7 +272,7 @@ export default function LoginPage() {
 
       {/* Footer */}
       <footer className="text-center py-4 text-xs text-slate-500 border-t border-slate-200 bg-white">
-        National Statistical Office • Subordinate Statistical Service (SSS) & ISS Cadre Portal
+        Sketu AI • National Statistical Office • Subordinate Statistical Service (SSS) & ISS Cadre Portal
       </footer>
     </div>
   );

@@ -404,7 +404,7 @@ export default function PracticePage() {
           </div>
 
           <h2 className="mt-5 text-lg font-semibold text-slate-900">
-            Gyanivo AI is preparing your question
+            Sketu AI is preparing your question
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
@@ -481,12 +481,12 @@ export default function PracticePage() {
         <header className="mb-6 flex items-center justify-between rounded-2xl border border-white/70 bg-white/80 px-5 py-4 shadow-sm backdrop-blur-xl">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 font-bold text-white shadow-lg shadow-violet-200">
-              G
+              S
             </div>
 
             <div>
               <h1 className="font-bold tracking-tight text-slate-950">
-                Gyanivo AI
+                Sketu AI
               </h1>
 
               <p className="text-xs text-slate-500">
@@ -528,7 +528,7 @@ export default function PracticePage() {
             </h2>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-              Gyanivo is adjusting your questions in real time based on your mistakes, speed and concept mastery.
+              Sketu AI is adjusting your questions in real time based on your mistakes, speed and concept mastery.
             </p>
           </div>
 
@@ -650,7 +650,7 @@ export default function PracticePage() {
                   </h3>
 
                   <p className="mt-4 text-sm leading-6 text-slate-600">
-                    Solve it one step at a time. Gyanivo checks your method, not just the final answer.
+                    Solve it one step at a time. Sketu AI checks your method, not just the final answer.
                   </p>
                 </div>
               </div>
@@ -897,7 +897,7 @@ export default function PracticePage() {
                 </div>
 
                 <h3 className="mt-5 text-xl font-bold">
-                  Gyanivo Tutor
+                  Sketu AI Tutor
                 </h3>
 
                 <p className="mt-2 text-sm leading-6 text-slate-300">
@@ -979,7 +979,7 @@ export default function PracticePage() {
                 .weakestSkill && (
                 <>
                   <p className="mt-2 text-sm leading-6 text-slate-500">
-                    Gyanivo is selecting more questions around this skill to strengthen your understanding.
+                    Sketu AI is selecting more questions around this skill to strengthen your understanding.
                   </p>
 
                   <div className="mt-5">

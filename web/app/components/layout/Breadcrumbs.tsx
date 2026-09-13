@@ -23,7 +23,7 @@ export function Breadcrumbs() {
         className="flex items-center gap-1 hover:text-blue-700 transition"
       >
         <Home className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Gyanivo</span>
+        <span className="hidden sm:inline">Sketu</span>
       </Link>
 
       {segments.map((seg, idx) => {

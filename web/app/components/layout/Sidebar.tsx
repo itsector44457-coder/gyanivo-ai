@@ -141,7 +141,7 @@ export function Sidebar({
             </div>
             <div className="min-w-0">
               <h1 className="text-sm font-black tracking-tight text-white flex items-center gap-1.5">
-                Gyanivo AI
+                Sketu AI
                 <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
                   MoSPI
                 </span>

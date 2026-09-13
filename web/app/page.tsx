@@ -45,7 +45,7 @@ export default function HomePage() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-black tracking-tight text-white">Gyanivo AI</h1>
+              <h1 className="text-lg font-black tracking-tight text-white">Sketu AI</h1>
               <span className="rounded bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-300 border border-blue-400/30">
                 MoSPI
               </span>
@@ -189,7 +189,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="mt-auto border-t border-slate-800 py-6 px-6 text-center text-xs text-slate-500">
-        <p>Gyanivo AI • Ministry of Statistics and Programme Implementation (MoSPI) • SIH26101</p>
+        <p>Sketu AI • Ministry of Statistics and Programme Implementation (MoSPI) • SIH26101</p>
         <p className="mt-1 text-slate-600">
           Prototype Implementation for Smart India Hackathon. All cadre data represents sample demo figures.
         </p>

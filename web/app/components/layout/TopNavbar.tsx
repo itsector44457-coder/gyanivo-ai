@@ -282,7 +282,7 @@ export function TopNavbar({ onToggleMobileSidebar }: TopNavbarProps) {
       <Modal
         isOpen={showHelpModal}
         onClose={() => setShowHelpModal(false)}
-        title="Gyanivo AI — Platform Guidance"
+        title="Sketu AI — Platform Guidance"
         maxWidth="lg"
       >
         <div className="space-y-4 text-xs text-slate-600">
