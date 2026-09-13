@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { PrototypeBadge } from "@/components/ui/Badge";
 import { SourceCitationBadge } from "@/components/ui/SourceCitationBadge";
+import Header from "@/components/layout/Header";
 
 export default function HomePage() {
   const [activeSandboxTab, setActiveSandboxTab] = useState<"generator" | "copilot" | "adaptive">("generator");
@@ -105,78 +106,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FAFCFF] text-slate-900 flex flex-col selection:bg-blue-600 selection:text-white font-sans antialiased relative">
-      {/* Top Official National Bar with Tricolor Accent */}
-      <div className="bg-slate-900 text-white text-xs">
-        <div className="h-1 w-full bg-gradient-to-r from-amber-500 via-white to-emerald-500" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2 font-medium text-[11px] sm:text-xs">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Government of India • Ministry of Statistics and Programme Implementation (MoSPI)</span>
-          </div>
-          <div className="flex items-center gap-3 text-[11px]">
-            <span className="text-slate-300 hidden sm:inline">National Statistical Systems Training Academy (NSSTA)</span>
-            <PrototypeBadge label="SIH26101 OFFICIAL PROTOTYPE" />
-          </div>
-        </div>
-      </div>
-
-      {/* Main Navbar */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-2xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 shadow-md shadow-blue-600/20 group-hover:scale-105 transition">
-              <Sparkles className="h-5 w-5 text-amber-300" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-900">
-                  Sketu AI
-                </h1>
-                <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700 border border-blue-200">
-                  MoSPI
-                </span>
-              </div>
-              <p className="text-[10px] text-slate-500">Competency Intelligence & Assessment Platform</p>
-            </div>
-          </Link>
-
-          {/* Nav Links */}
-          <nav className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-600">
-            <Link href="/copilot" className="hover:text-blue-700 transition flex items-center gap-1.5">
-              <Bot className="h-4 w-4 text-blue-600" />
-              <span>AI Copilot</span>
-              <span className="text-[9px] bg-blue-100 text-blue-800 font-bold px-1.5 py-0.2 rounded-full">New</span>
-            </Link>
-            <Link href="/ai-engine" className="hover:text-blue-700 transition flex items-center gap-1.5">
-              <Cpu className="h-4 w-4 text-indigo-600" />
-              <span>Psychometrics Lab</span>
-              <span className="text-[9px] bg-indigo-100 text-indigo-800 font-bold px-1.5 py-0.2 rounded-full">CAT/IRT</span>
-            </Link>
-            <Link href="/trainer/materials/upload" className="hover:text-blue-700 transition flex items-center gap-1.5">
-              <FileText className="h-4 w-4 text-emerald-600" />
-              <span>500p PDF Ingestion</span>
-            </Link>
-          </nav>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/copilot"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-2xs"
-            >
-              <Bot className="h-4 w-4 text-blue-600" />
-              <span>Try AI Copilot</span>
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#1E3A8A] px-4 sm:px-5 py-2 text-xs font-bold text-white shadow-md hover:bg-blue-900 transition hover:scale-[1.02]"
-            >
-              <span>Officer Login</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* HERO SECTION */}
       <section className="relative px-4 sm:px-6 pt-16 pb-14 max-w-6xl mx-auto text-center">
