@@ -23,21 +23,22 @@ export class AuthController {
 
   private setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
     const isProduction = process.env.NODE_ENV === 'production';
+    const sameSite = isProduction ? 'none' : 'lax';
 
-    // Access Token Cookie (15 mins)
+    // Frontend and API are deployed on different domains in production,
+    // therefore SameSite=None + Secure is required for cookie auth.
     res.cookie('access_token', accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite,
       maxAge: 15 * 60 * 1000,
       path: '/',
     });
 
-    // Refresh Token Cookie (7 days)
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',
     });
@@ -45,16 +46,18 @@ export class AuthController {
 
   private clearAuthCookies(res: Response) {
     const isProduction = process.env.NODE_ENV === 'production';
+    const sameSite = isProduction ? 'none' : 'lax';
+
     res.clearCookie('access_token', {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite,
       path: '/',
     });
     res.clearCookie('refresh_token', {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite,
       path: '/',
     });
   }
