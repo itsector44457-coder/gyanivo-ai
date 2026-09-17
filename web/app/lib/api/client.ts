@@ -1,4 +1,9 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  (process.env.NODE_ENV === 'production'
+    ? 'https://gyanivo-api.onrender.com'
+    : 'http://localhost:5000');
 
 export class ApiError extends Error {
   status: number;
@@ -45,14 +50,14 @@ export async function apiClient<T = any>(
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
-    credentials: 'include', // Sends HttpOnly cookies
+    credentials: 'include',
     ...customConfig,
   };
 
   try {
     const response = await fetch(url, config);
 
-    // Auto refresh token on 401 if not already requesting refresh/login
+    // Auto refresh token on 401 if not already requesting refresh/login.
     if (response.status === 401 && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/refresh')) {
       try {
         const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
@@ -66,7 +71,7 @@ export async function apiClient<T = any>(
           if (refreshData.accessToken && typeof window !== 'undefined') {
             localStorage.setItem('gyanivo_access_token', refreshData.accessToken);
           }
-          // Retry original request with new token
+
           const retryConfig = {
             ...config,
             headers: {
@@ -84,6 +89,7 @@ export async function apiClient<T = any>(
       } catch {
         if (typeof window !== 'undefined') {
           localStorage.removeItem('gyanivo_access_token');
+          localStorage.removeItem('accessToken');
         }
       }
     }
