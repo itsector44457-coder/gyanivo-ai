@@ -32,12 +32,32 @@ export default function QRPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFCFF] flex flex-col font-sans antialiased text-slate-900">
-      <div className="print:hidden">
+    <div className="min-h-screen bg-[#F1F5F9] flex flex-col font-sans antialiased text-slate-900 relative overflow-hidden">
+      {/* Dynamic Background with Disha AI Logo Watermark */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden z-0 select-none print:hidden">
+        {/* Ambient atmospheric glows matching Disha AI color palette */}
+        <div className="absolute -top-32 -left-32 w-[550px] h-[550px] rounded-full bg-blue-500/15 blur-[120px]" />
+        <div className="absolute -bottom-32 -right-32 w-[550px] h-[550px] rounded-full bg-amber-400/15 blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[750px] rounded-full bg-indigo-500/10 blur-[140px]" />
+
+        {/* Large Prominent Disha AI Logo Watermark */}
+        <div className="relative flex items-center justify-center w-full h-full">
+          <img
+            src="/Disha_AI_Logo.svg"
+            alt="Disha AI Background"
+            className="w-[950px] max-w-none opacity-20 filter drop-shadow-2xl select-none"
+          />
+        </div>
+
+        {/* High-tech dot matrix overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(#1e40af_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.04]" />
+      </div>
+
+      <div className="relative z-10 print:hidden">
         <Header />
       </div>
 
-      <main className="flex-1 max-w-4xl mx-auto px-4 py-12 sm:px-6 w-full flex flex-col items-center">
+      <main className="relative z-10 flex-1 max-w-4xl mx-auto px-4 py-12 sm:px-6 w-full flex flex-col items-center">
         {/* Banner */}
         <div className="text-center max-w-xl mx-auto mb-8 print:mb-4">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 mb-3">
