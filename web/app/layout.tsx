@@ -21,9 +21,10 @@ export const metadata: Metadata = {
   authors: [{ name: "Disha AI Team" }],
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
       { url: "/Disha_AI_Logo.png", type: "image/png" },
     ],
-    shortcut: "/Disha_AI_Logo.png",
+    shortcut: "/favicon.ico",
     apple: "/Disha_AI_Logo.png",
   },
   manifest: "/manifest.json",
