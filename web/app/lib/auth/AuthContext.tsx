@@ -41,6 +41,20 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/** Returns true if the stored JWT access token is expired (or missing). */
+function isAccessTokenExpired(): boolean {
+  if (typeof window === 'undefined') return true;
+  const token = localStorage.getItem('gyanivo_access_token');
+  if (!token) return true;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    // exp is in seconds; give 30-second buffer before actual expiry
+    return !payload.exp || payload.exp * 1000 < Date.now() + 30_000;
+  } catch {
+    return true;
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +63,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = useCallback(async () => {
     try {
+      // If the stored access token is expired, silently try to renew it via
+      // the HttpOnly refresh_token cookie BEFORE calling /auth/me.
+      // This prevents the guaranteed 401 you'd otherwise get after 15 minutes.
+      if (isAccessTokenExpired()) {
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+        const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // sends the HttpOnly refresh_token cookie
+        });
+        if (refreshRes.ok) {
+          const refreshData = await refreshRes.json();
+          if (refreshData.accessToken) {
+            localStorage.setItem('gyanivo_access_token', refreshData.accessToken);
+          }
+        } else {
+          // Refresh cookie is gone / expired — clear stale state and bail out
+          localStorage.removeItem('gyanivo_access_token');
+          setUser(null);
+          setIsLoading(false);
+          return;
+        }
+      }
+
       const data = await apiClient<{ success: boolean; user: UserProfile }>('/auth/me');
       if (data?.success && data?.user) {
         setUser(data.user);
@@ -56,6 +94,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
       }
     } catch {
+      // Last-resort cleanup so the app doesn't loop with a stale token
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('gyanivo_access_token');
+      }
       setUser(null);
     } finally {
       setIsLoading(false);

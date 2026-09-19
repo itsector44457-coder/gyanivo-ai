@@ -24,11 +24,16 @@ export class AuthController {
   private setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
     const isProduction = process.env.NODE_ENV === 'production';
 
+    // Cross-site deployment (e.g., web on gyanivo-web.onrender.com,
+    // API on gyanivo-api.onrender.com) requires sameSite:'none' + Secure
+    // so the browser does NOT strip the HttpOnly refresh_token cookie.
+    // 'strict' would silently block cross-site cookies causing 401 loops.
+
     // Access Token Cookie (15 mins)
     res.cookie('access_token', accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 15 * 60 * 1000,
       path: '/',
     });
@@ -37,7 +42,7 @@ export class AuthController {
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',
     });
@@ -48,13 +53,13 @@ export class AuthController {
     res.clearCookie('access_token', {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
     });
     res.clearCookie('refresh_token', {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
     });
   }

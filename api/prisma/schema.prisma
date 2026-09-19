@@ -8,269 +8,699 @@ datasource db {
   provider = "postgresql"
 }
 
-// ======================================================
-// LEGACY MODELS (PRESERVED FOR /practice AND ADAPTIVE FLOW)
-// ======================================================
-
-// ======================================================
-// BOARD
-// ======================================================
-
 model Board {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  classes SchoolClass[]
+  id        Int           @id @default(autoincrement())
+  name      String        @unique
+  code      String        @unique
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  classes   SchoolClass[]
 }
 
-// ======================================================
-// SCHOOL CLASS
-// ======================================================
-
 model SchoolClass {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
   level     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  boardId Int
-  board   Board @relation(fields: [boardId], references: [id])
-
-  subjects Subject[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  boardId   Int
+  board     Board     @relation(fields: [boardId], references: [id])
+  subjects  Subject[]
 
   @@unique([boardId, level])
 }
 
-// ======================================================
-// SUBJECT
-// ======================================================
-
 model Subject {
-  id        Int      @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   name      String
   code      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  classId Int
-  class   SchoolClass @relation(fields: [classId], references: [id])
-
-  chapters Chapter[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  classId   Int
+  chapters  Chapter[]
+  class     SchoolClass @relation(fields: [classId], references: [id])
 
   @@unique([classId, code])
 }
 
-// ======================================================
-// CHAPTER
-// ======================================================
-
 model Chapter {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   order     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   subjectId Int
-  subject   Subject @relation(fields: [subjectId], references: [id])
-
-  topics    Topic[]
+  subject   Subject    @relation(fields: [subjectId], references: [id])
   questions Question[]
+  topics    Topic[]
 
   @@unique([subjectId, order])
 }
 
-// ======================================================
-// TOPIC
-// ======================================================
-
 model Topic {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   chapterId Int
-  chapter   Chapter @relation(fields: [chapterId], references: [id])
-
-  skills    Skill[]
   questions Question[]
+  skills    Skill[]
+  chapter   Chapter    @relation(fields: [chapterId], references: [id])
 }
-
-// ======================================================
-// SKILL
-// ======================================================
 
 model Skill {
-  id          Int      @id @default(autoincrement())
+  id          Int                   @id @default(autoincrement())
   name        String
-  code        String   @unique
+  code        String                @unique
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  topicId Int
-  topic   Topic @relation(fields: [topicId], references: [id])
-
-  questions QuestionSkill[]
-  mastery   StudentSkillMastery[]
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  topicId     Int
+  questions   QuestionSkill[]
+  topic       Topic                 @relation(fields: [topicId], references: [id])
+  mastery     StudentSkillMastery[]
 }
 
-// ======================================================
-// QUESTION
-// ======================================================
-
 model Question {
-  id           Int    @id @default(autoincrement())
-  text         String
-  difficulty   Int
-  questionType String @default("STEP_BASED")
-
+  id             Int             @id @default(autoincrement())
+  text           String
+  difficulty     Int
+  questionType   String          @default("STEP_BASED")
   expectedAnswer String?
   expectedSteps  Json?
   commonMistakes Json?
-
-  isActive Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  chapterId Int
-  chapter   Chapter @relation(fields: [chapterId], references: [id])
-
-  topicId Int
-  topic   Topic @relation(fields: [topicId], references: [id])
-
-  skills   QuestionSkill[]
-  hints    Hint[]
-  attempts Attempt[]
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  chapterId      Int
+  topicId        Int
+  attempts       Attempt[]
+  hints          Hint[]
+  chapter        Chapter         @relation(fields: [chapterId], references: [id])
+  topic          Topic           @relation(fields: [topicId], references: [id])
+  skills         QuestionSkill[]
 }
 
-// ======================================================
-// QUESTION ↔ SKILL
-// ======================================================
-
 model QuestionSkill {
-  id     Int   @id @default(autoincrement())
-  weight Float @default(1)
-
+  id         Int      @id @default(autoincrement())
+  weight     Float    @default(1)
   questionId Int
+  skillId    Int
   question   Question @relation(fields: [questionId], references: [id])
-
-  skillId Int
-  skill   Skill @relation(fields: [skillId], references: [id])
+  skill      Skill    @relation(fields: [skillId], references: [id])
 
   @@unique([questionId, skillId])
 }
 
-// ======================================================
-// HINT
-// ======================================================
-
 model Hint {
-  id    Int    @id @default(autoincrement())
-  text  String
-  level Int
-
+  id         Int      @id @default(autoincrement())
+  text       String
+  level      Int
   questionId Int
   question   Question @relation(fields: [questionId], references: [id])
 
   @@unique([questionId, level])
 }
 
-// ======================================================
-// STUDENT
-// ======================================================
-
 model Student {
-  id         Int     @id @default(autoincrement())
+  id         Int                   @id @default(autoincrement())
   name       String
-  email      String? @unique
+  email      String?               @unique
   classLevel Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  attempts Attempt[]
-  mastery  StudentSkillMastery[]
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+  attempts   Attempt[]
+  mastery    StudentSkillMastery[]
 }
-
-// ======================================================
-// ATTEMPT
-// ======================================================
 
 model Attempt {
-  id     Int    @id @default(autoincrement())
-  status String @default("IN_PROGRESS")
-
-  startedAt   DateTime  @default(now())
+  id          Int           @id @default(autoincrement())
+  status      String        @default("IN_PROGRESS")
+  startedAt   DateTime      @default(now())
   completedAt DateTime?
-
-  studentId Int
-  student   Student @relation(fields: [studentId], references: [id])
-
-  questionId Int
-  question   Question @relation(fields: [questionId], references: [id])
-
-  steps AttemptStep[]
+  studentId   Int
+  questionId  Int
+  question    Question      @relation(fields: [questionId], references: [id])
+  student     Student       @relation(fields: [studentId], references: [id])
+  steps       AttemptStep[]
 }
-
-// ======================================================
-// ATTEMPT STEP
-// ======================================================
 
 model AttemptStep {
-  id Int @id @default(autoincrement())
-
-  stepNumber  Int
-  studentStep String
-
-  isCorrect   Boolean
-  mistakeType String?
-
-  skillCode String?
-
-  attemptNumber Int     @default(1)
-  hintUsed      Boolean @default(false)
+  id            Int      @id @default(autoincrement())
+  stepNumber    Int
+  studentStep   String
+  isCorrect     Boolean
+  mistakeType   String?
+  skillCode     String?
+  attemptNumber Int      @default(1)
+  hintUsed      Boolean  @default(false)
   timeTakenSec  Int?
-
-  createdAt DateTime @default(now())
-
-  attemptId Int
-  attempt   Attempt @relation(fields: [attemptId], references: [id])
+  createdAt     DateTime @default(now())
+  attemptId     Int
+  attempt       Attempt  @relation(fields: [attemptId], references: [id])
 }
 
-// ======================================================
-// STUDENT SKILL MASTERY
-// ======================================================
-
 model StudentSkillMastery {
-  id Int @id @default(autoincrement())
-
-  mastery Float @default(50)
-
-  attempts  Int @default(0)
-  correct   Int @default(0)
-  incorrect Int @default(0)
-
+  id        Int      @id @default(autoincrement())
+  mastery   Float    @default(50)
+  attempts  Int      @default(0)
+  correct   Int      @default(0)
+  incorrect Int      @default(0)
   updatedAt DateTime @updatedAt
-
   studentId Int
-  student   Student @relation(fields: [studentId], references: [id])
-
-  skillId Int
-  skill   Skill @relation(fields: [skillId], references: [id])
+  skillId   Int
+  skill     Skill    @relation(fields: [skillId], references: [id])
+  student   Student  @relation(fields: [studentId], references: [id])
 
   @@unique([studentId, skillId])
 }
 
-// ======================================================
-// ENTERPRISE SIH26101 CORE MODELS
-// ======================================================
+model User {
+  id                         Int                 @id @default(autoincrement())
+  email                      String              @unique
+  passwordHash               String
+  firstName                  String
+  lastName                   String
+  systemRole                 SystemRole          @default(EMPLOYEE)
+  status                     UserStatus          @default(ACTIVE)
+  lastLoginAt                DateTime?
+  createdAt                  DateTime            @default(now())
+  updatedAt                  DateTime            @updatedAt
+  createdAssessments         Assessment[]
+  sessions                   AuthSession[]
+  approvedCourseMappings     CourseCompetency[]
+  profile                    EmployeeProfile?
+  reviewedGeneratedQuestions GeneratedQuestion[] @relation("GeneratedQuestionReviewedBy")
+  uploadedTrainingMaterials  TrainingMaterial[]  @relation("TrainingMaterialUploadedBy")
+
+  @@index([email])
+  @@index([systemRole])
+}
+
+model EmployeeProfile {
+  id                       Int                    @id @default(autoincrement())
+  userId                   Int                    @unique
+  employeeCode             String?                @unique
+  designation              String
+  cadre                    String?
+  currentAssignment        String?
+  educationalQualification String?
+  experienceYears          Float                  @default(0)
+  departmentId             Int?
+  jobRoleId                Int?
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @updatedAt
+  assessmentAttempts       AssessmentAttempt[]
+  competencyHistory        CompetencyHistory[]
+  recommendations          CourseRecommendation[]
+  competencies             EmployeeCompetency[]
+  department               Department?            @relation(fields: [departmentId], references: [id])
+  jobRole                  JobRole?               @relation(fields: [jobRoleId], references: [id])
+  user                     User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollments              TrainingEnrollment[]
+
+  @@index([departmentId])
+  @@index([jobRoleId])
+}
+
+model Department {
+  id          Int               @id @default(autoincrement())
+  code        String            @unique
+  name        String
+  description String?
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  employees   EmployeeProfile[]
+  jobRoles    JobRole[]
+}
+
+model JobRole {
+  id           Int                         @id @default(autoincrement())
+  code         String                      @unique
+  name         String
+  description  String?
+  level        Int?
+  isActive     Boolean                     @default(true)
+  departmentId Int?
+  createdAt    DateTime                    @default(now())
+  updatedAt    DateTime                    @updatedAt
+  employees    EmployeeProfile[]
+  department   Department?                 @relation(fields: [departmentId], references: [id])
+  requirements RoleCompetencyRequirement[]
+
+  @@index([departmentId])
+}
+
+model CompetencyDomain {
+  id           Int          @id @default(autoincrement())
+  code         String       @unique
+  name         String
+  description  String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  competencies Competency[]
+}
+
+model Competency {
+  id                   Int                          @id @default(autoincrement())
+  code                 String                       @unique
+  name                 String
+  description          String?
+  domainId             Int
+  parentCompetencyId   Int?
+  proficiencyScaleMin  Int                          @default(1)
+  proficiencyScaleMax  Int                          @default(100)
+  isActive             Boolean                      @default(true)
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  assessments          Assessment[]
+  assessmentAttempts   AssessmentAttempt[]
+  questionBank         AssessmentQuestionBankItem[]
+  domain               CompetencyDomain             @relation(fields: [domainId], references: [id])
+  parentCompetency     Competency?                  @relation("CompetencyHierarchy", fields: [parentCompetencyId], references: [id])
+  childCompetencies    Competency[]                 @relation("CompetencyHierarchy")
+  historyRecords       CompetencyHistory[]
+  courseMappings       CourseCompetency[]
+  prerequisites        CoursePrerequisite[]
+  recommendations      CourseRecommendation[]
+  employeeCompetencies EmployeeCompetency[]
+  generatedQuestions   GeneratedQuestion[]
+  roleRequirements     RoleCompetencyRequirement[]
+  trainingMaterials    TrainingMaterial[]
+
+  @@index([domainId])
+  @@index([parentCompetencyId])
+}
+
+model RoleCompetencyRequirement {
+  id              Int        @id @default(autoincrement())
+  jobRoleId       Int
+  competencyId    Int
+  requiredScore   Float
+  priorityWeight  Float      @default(1.0)
+  isMandatory     Boolean    @default(true)
+  minimumScore    Float?
+  sourceReference String?
+  approvedAt      DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  competency      Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  jobRole         JobRole    @relation(fields: [jobRoleId], references: [id], onDelete: Cascade)
+
+  @@unique([jobRoleId, competencyId])
+  @@index([jobRoleId])
+  @@index([competencyId])
+}
+
+model EmployeeCompetency {
+  id                Int             @id @default(autoincrement())
+  employeeProfileId Int
+  competencyId      Int
+  currentScore      Float           @default(0)
+  confidence        Float           @default(0.5)
+  evidenceCount     Int             @default(0)
+  lastEvaluatedAt   DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  competency        Competency      @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeProfileId, competencyId])
+  @@index([employeeProfileId])
+  @@index([competencyId])
+}
+
+model CompetencyHistory {
+  id                Int                         @id @default(autoincrement())
+  employeeProfileId Int
+  competencyId      Int
+  previousScore     Float
+  newScore          Float
+  confidence        Float                       @default(0.5)
+  changeReason      String?
+  sourceType        CompetencyHistorySourceType @default(DIAGNOSTIC_ASSESSMENT)
+  sourceId          String?
+  createdAt         DateTime                    @default(now())
+  competency        Competency                  @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  employeeProfile   EmployeeProfile             @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  @@index([employeeProfileId])
+  @@index([competencyId])
+  @@index([createdAt])
+}
+
+model AuthSession {
+  id               String    @id @default(uuid())
+  userId           Int
+  refreshTokenHash String
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  lastUsedAt       DateTime?
+  userAgent        String?
+  ipAddress        String?
+  createdAt        DateTime  @default(now())
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([refreshTokenHash])
+}
+
+model Assessment {
+  id               Int                 @id @default(autoincrement())
+  title            String
+  description      String?
+  type             AssessmentType      @default(DIAGNOSTIC)
+  status           AssessmentStatus    @default(PUBLISHED)
+  competencyId     Int?
+  createdByUserId  Int?
+  timeLimitMinutes Int?
+  questionCount    Int                 @default(10)
+  passingScore     Float?
+  adaptiveEnabled  Boolean             @default(true)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  competency       Competency?         @relation(fields: [competencyId], references: [id])
+  createdByUser    User?               @relation(fields: [createdByUserId], references: [id])
+  attempts         AssessmentAttempt[]
+
+  @@index([competencyId])
+  @@index([type])
+  @@index([status])
+}
+
+model AssessmentQuestionBankItem {
+  id               Int                       @id @default(autoincrement())
+  competencyId     Int
+  questionText     String
+  questionType     String                    @default("MCQ")
+  difficulty       QuestionDifficulty        @default(MEDIUM)
+  options          Json
+  correctOption    String
+  explanation      String
+  sourceType       String                    @default("CURATED_FRAMEWORK")
+  sourceReference  String?
+  isActive         Boolean                   @default(true)
+  isVerified       Boolean                   @default(true)
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+  sourceMaterialId Int?
+  answerAttempts   AssessmentAnswerAttempt[]
+  competency       Competency                @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  sourceMaterial   TrainingMaterial?         @relation(fields: [sourceMaterialId], references: [id])
+  generatedSource  GeneratedQuestion?        @relation("GeneratedQuestionQuestionBankItem")
+
+  @@index([competencyId])
+  @@index([difficulty])
+  @@index([isActive])
+  @@index([sourceMaterialId])
+}
+
+model AssessmentAttempt {
+  id                     Int                       @id @default(autoincrement())
+  assessmentId           Int?
+  employeeProfileId      Int
+  competencyId           Int
+  status                 AttemptStatus             @default(IN_PROGRESS)
+  startedAt              DateTime                  @default(now())
+  completedAt            DateTime?
+  currentQuestionIndex   Int                       @default(0)
+  currentDifficulty      QuestionDifficulty        @default(MEDIUM)
+  totalQuestions         Int                       @default(10)
+  correctAnswers         Int                       @default(0)
+  rawScore               Float                     @default(0.0)
+  initialCompetencyScore Float?
+  finalCompetencyScore   Float?
+  durationSeconds        Int?
+  createdAt              DateTime                  @default(now())
+  updatedAt              DateTime                  @updatedAt
+  answers                AssessmentAnswerAttempt[]
+  assessment             Assessment?               @relation(fields: [assessmentId], references: [id])
+  competency             Competency                @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  employeeProfile        EmployeeProfile           @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  @@index([employeeProfileId])
+  @@index([competencyId])
+  @@index([status])
+}
+
+model AssessmentAnswerAttempt {
+  id                     Int                        @id @default(autoincrement())
+  assessmentAttemptId    Int
+  questionId             Int
+  selectedOption         String
+  isCorrect              Boolean
+  difficulty             QuestionDifficulty
+  responseTimeMs         Int?
+  attemptSequence        Int
+  estimatedMasteryBefore Float?
+  estimatedMasteryAfter  Float?
+  answeredAt             DateTime                   @default(now())
+  assessmentAttempt      AssessmentAttempt          @relation(fields: [assessmentAttemptId], references: [id], onDelete: Cascade)
+  question               AssessmentQuestionBankItem @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentAttemptId])
+  @@index([questionId])
+}
+
+model CourseProvider {
+  id           Int             @id @default(autoincrement())
+  code         String          @unique
+  name         String
+  providerType String          @default("EXTERNAL_PLATFORM")
+  baseUrl      String?
+  status       ProviderStatus  @default(ACTIVE)
+  capabilities Json?
+  lastSyncAt   DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  courses      Course[]
+  syncRuns     CourseSyncRun[]
+
+  @@index([code])
+  @@index([status])
+}
+
+model Course {
+  id                 Int                    @id @default(autoincrement())
+  providerId         Int
+  externalId         String
+  title              String
+  description        String?
+  providerName       String
+  durationMinutes    Int                    @default(60)
+  language           String                 @default("English")
+  difficultyLevel    CourseDifficulty       @default(BEGINNER)
+  difficultySource   DifficultySource       @default(PROVIDER_METADATA)
+  courseUrl          String?
+  thumbnailUrl       String?
+  learningOutcomes   Json?
+  tags               Json?
+  prerequisitesText  String?
+  isActive           Boolean                @default(true)
+  sourceUpdatedAt    DateTime?
+  lastSyncedAt       DateTime               @default(now())
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  provider           CourseProvider         @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  competencyMappings CourseCompetency[]
+  prerequisites      CoursePrerequisite[]   @relation("CoursePrerequisites")
+  requiredByCourses  CoursePrerequisite[]   @relation("PrerequisiteCourse")
+  recommendations    CourseRecommendation[]
+  enrollments        TrainingEnrollment[]
+
+  @@unique([providerId, externalId])
+  @@index([providerId])
+  @@index([difficultyLevel])
+  @@index([isActive])
+}
+
+model CourseCompetency {
+  id                 Int           @id @default(autoincrement())
+  courseId           Int
+  competencyId       Int
+  relevanceScore     Float
+  mappingMethod      MappingMethod @default(SEMANTIC)
+  mappingReliability Float         @default(0.8)
+  evidence           String?
+  status             MappingStatus @default(APPROVED)
+  approvedByUserId   Int?
+  approvedAt         DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  approvedByUser     User?         @relation(fields: [approvedByUserId], references: [id])
+  competency         Competency    @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  course             Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, competencyId])
+  @@index([courseId])
+  @@index([competencyId])
+  @@index([status])
+  @@index([relevanceScore])
+}
+
+model CoursePrerequisite {
+  id                       Int         @id @default(autoincrement())
+  courseId                 Int
+  prerequisiteCourseId     Int?
+  prerequisiteCompetencyId Int?
+  minimumCompetencyScore   Float?
+  createdAt                DateTime    @default(now())
+  course                   Course      @relation("CoursePrerequisites", fields: [courseId], references: [id], onDelete: Cascade)
+  prerequisiteCompetency   Competency? @relation(fields: [prerequisiteCompetencyId], references: [id])
+  prerequisiteCourse       Course?     @relation("PrerequisiteCourse", fields: [prerequisiteCourseId], references: [id])
+
+  @@index([courseId])
+  @@index([prerequisiteCourseId])
+  @@index([prerequisiteCompetencyId])
+}
+
+model CourseSyncRun {
+  id           Int            @id @default(autoincrement())
+  providerId   Int
+  startedAt    DateTime       @default(now())
+  completedAt  DateTime?
+  status       SyncStatus     @default(SUCCESS)
+  itemsFetched Int            @default(0)
+  itemsCreated Int            @default(0)
+  itemsUpdated Int            @default(0)
+  itemsFailed  Int            @default(0)
+  errorSummary String?
+  provider     CourseProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId])
+  @@index([startedAt])
+}
+
+model CourseRecommendation {
+  id                  Int             @id @default(autoincrement())
+  employeeProfileId   Int
+  courseId            Int
+  competencyId        Int
+  recommendationScore Float
+  rankingPosition     Int
+  reasons             Json
+  preCompetencyScore  Float?
+  postCompetencyScore Float?
+  outcomeImprovement  Float?
+  recommendedAt       DateTime        @default(now())
+  acceptedAt          DateTime?
+  startedAt           DateTime?
+  completedAt         DateTime?
+  competency          Competency      @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  course              Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  employeeProfile     EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  @@index([employeeProfileId])
+  @@index([courseId])
+  @@index([competencyId])
+  @@index([recommendedAt])
+}
+
+model TrainingEnrollment {
+  id                Int              @id @default(autoincrement())
+  employeeProfileId Int
+  courseId          Int
+  status            EnrollmentStatus @default(ENROLLED)
+  completionSource  EnrollmentSource @default(LOCAL_PLATFORM_EVENT)
+  progressPercent   Float            @default(0.0)
+  score             Float?
+  enrolledAt        DateTime         @default(now())
+  completedAt       DateTime?
+  updatedAt         DateTime         @updatedAt
+  course            Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  employeeProfile   EmployeeProfile  @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeProfileId, courseId])
+  @@index([employeeProfileId])
+  @@index([courseId])
+  @@index([status])
+}
+
+model TrainingMaterial {
+  id                 Int                          @id @default(autoincrement())
+  title              String
+  description        String?
+  originalFileName   String
+  storedFileName     String
+  storagePath        String
+  mimeType           String
+  fileSizeBytes      Int
+  checksum           String?
+  status             MaterialProcessingStatus     @default(UPLOADED)
+  processingError    String?
+  pageCount          Int?
+  language           String                       @default("English")
+  extractedText      String?
+  competencyId       Int?
+  uploadedByUserId   Int
+  processedAt        DateTime?
+  createdAt          DateTime                     @default(now())
+  updatedAt          DateTime                     @updatedAt
+  questionBankItems  AssessmentQuestionBankItem[]
+  generatedQuestions GeneratedQuestion[]
+  chunks             MaterialChunk[]
+  competency         Competency?                  @relation(fields: [competencyId], references: [id])
+  uploadedBy         User                         @relation("TrainingMaterialUploadedBy", fields: [uploadedByUserId], references: [id])
+
+  @@index([uploadedByUserId])
+  @@index([competencyId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model MaterialChunk {
+  id                 Int                 @id @default(autoincrement())
+  materialId         Int
+  chunkIndex         Int
+  pageNumber         Int?
+  text               String
+  tokenCount         Int?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  generatedQuestions GeneratedQuestion[]
+  material           TrainingMaterial    @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@unique([materialId, chunkIndex])
+  @@index([materialId])
+  @@index([pageNumber])
+}
+
+model GeneratedQuestion {
+  id                 Int                           @id @default(autoincrement())
+  materialId         Int
+  sourceChunkId      Int?
+  competencyId       Int
+  questionText       String
+  questionType       String                        @default("MCQ")
+  difficulty         QuestionDifficulty            @default(MEDIUM)
+  options            Json
+  correctOption      String
+  explanation        String
+  sourcePage         Int?
+  sourceExcerpt      String?
+  generatorProvider  String?
+  generatorModel     String?
+  confidence         Float?
+  status             GeneratedQuestionReviewStatus @default(PENDING)
+  reviewNotes        String?
+  reviewedByUserId   Int?
+  reviewedAt         DateTime?
+  questionBankItemId Int?                          @unique
+  createdAt          DateTime                      @default(now())
+  updatedAt          DateTime                      @updatedAt
+  competency         Competency                    @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+  material           TrainingMaterial              @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  questionBankItem   AssessmentQuestionBankItem?   @relation("GeneratedQuestionQuestionBankItem", fields: [questionBankItemId], references: [id])
+  reviewedBy         User?                         @relation("GeneratedQuestionReviewedBy", fields: [reviewedByUserId], references: [id])
+  sourceChunk        MaterialChunk?                @relation(fields: [sourceChunkId], references: [id])
+
+  @@index([materialId])
+  @@index([sourceChunkId])
+  @@index([competencyId])
+  @@index([status])
+  @@index([reviewedByUserId])
+}
 
 enum SystemRole {
   EMPLOYEE
@@ -292,10 +722,6 @@ enum CompetencyHistorySourceType {
   SYSTEM_RECALCULATION
 }
 
-// ======================================================
-// TRAINER / AI MATERIAL ENUMS
-// ======================================================
-
 enum MaterialProcessingStatus {
   UPLOADED
   PROCESSING
@@ -309,274 +735,6 @@ enum GeneratedQuestionReviewStatus {
   APPROVED
   REJECTED
 }
-
-// ======================================================
-// 1. USER
-// ======================================================
-
-model User {
-  id           Int        @id @default(autoincrement())
-  email        String     @unique
-  passwordHash String
-  firstName    String
-  lastName     String
-  systemRole   SystemRole @default(EMPLOYEE)
-  status       UserStatus @default(ACTIVE)
-
-  lastLoginAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  profile                EmployeeProfile?
-  sessions               AuthSession[]
-  createdAssessments     Assessment[]
-  approvedCourseMappings CourseCompetency[]
-
-  uploadedTrainingMaterials  TrainingMaterial[]  @relation("TrainingMaterialUploadedBy")
-  reviewedGeneratedQuestions GeneratedQuestion[] @relation("GeneratedQuestionReviewedBy")
-
-  @@index([email])
-  @@index([systemRole])
-}
-
-// ======================================================
-// 2. EMPLOYEE PROFILE
-// ======================================================
-
-model EmployeeProfile {
-  id     Int  @id @default(autoincrement())
-  userId Int  @unique
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  employeeCode             String? @unique
-  designation              String
-  cadre                    String?
-  currentAssignment        String?
-  educationalQualification String?
-  experienceYears          Float   @default(0)
-
-  departmentId Int?
-  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-
-  jobRoleId Int?
-  jobRole   JobRole? @relation(fields: [jobRoleId], references: [id], onDelete: SetNull)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  competencies       EmployeeCompetency[]
-  competencyHistory  CompetencyHistory[]
-  assessmentAttempts AssessmentAttempt[]
-  recommendations    CourseRecommendation[]
-  enrollments        TrainingEnrollment[]
-
-  @@index([departmentId])
-  @@index([jobRoleId])
-}
-
-// ======================================================
-// 3. DEPARTMENT
-// ======================================================
-
-model Department {
-  id          Int      @id @default(autoincrement())
-  code        String   @unique
-  name        String
-  description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  employees EmployeeProfile[]
-  jobRoles  JobRole[]
-}
-
-// ======================================================
-// 4. JOB ROLE
-// ======================================================
-
-model JobRole {
-  id          Int     @id @default(autoincrement())
-  code        String  @unique
-  name        String
-  description String?
-  level       Int?
-  isActive    Boolean @default(true)
-
-  departmentId Int?
-  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  employees    EmployeeProfile[]
-  requirements RoleCompetencyRequirement[]
-
-  @@index([departmentId])
-}
-
-// ======================================================
-// 5. COMPETENCY DOMAIN
-// ======================================================
-
-model CompetencyDomain {
-  id          Int      @id @default(autoincrement())
-  code        String   @unique
-  name        String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  competencies Competency[]
-}
-
-// ======================================================
-// 6. COMPETENCY
-// ======================================================
-
-model Competency {
-  id          Int     @id @default(autoincrement())
-  code        String  @unique
-  name        String
-  description String?
-
-  domainId Int
-  domain   CompetencyDomain @relation(fields: [domainId], references: [id], onDelete: Restrict)
-
-  parentCompetencyId Int?
-  parentCompetency   Competency?  @relation("CompetencyHierarchy", fields: [parentCompetencyId], references: [id], onDelete: SetNull)
-  childCompetencies  Competency[] @relation("CompetencyHierarchy")
-
-  proficiencyScaleMin Int     @default(1)
-  proficiencyScaleMax Int     @default(100)
-  isActive            Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  roleRequirements     RoleCompetencyRequirement[]
-  employeeCompetencies EmployeeCompetency[]
-  historyRecords       CompetencyHistory[]
-  assessments          Assessment[]
-  questionBank         AssessmentQuestionBankItem[]
-  assessmentAttempts   AssessmentAttempt[]
-  courseMappings       CourseCompetency[]
-  prerequisites        CoursePrerequisite[]
-  recommendations      CourseRecommendation[]
-
-  trainingMaterials  TrainingMaterial[]
-  generatedQuestions GeneratedQuestion[]
-
-  @@index([domainId])
-  @@index([parentCompetencyId])
-}
-
-// ======================================================
-// 7. ROLE COMPETENCY REQUIREMENT
-// ======================================================
-
-model RoleCompetencyRequirement {
-  id Int @id @default(autoincrement())
-
-  jobRoleId Int
-  jobRole   JobRole @relation(fields: [jobRoleId], references: [id], onDelete: Cascade)
-
-  competencyId Int
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
-
-  requiredScore   Float
-  priorityWeight  Float     @default(1.0)
-  isMandatory     Boolean   @default(true)
-  minimumScore    Float?
-  sourceReference String?
-  approvedAt      DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([jobRoleId, competencyId])
-  @@index([jobRoleId])
-  @@index([competencyId])
-}
-
-// ======================================================
-// 8. EMPLOYEE COMPETENCY
-// ======================================================
-
-model EmployeeCompetency {
-  id Int @id @default(autoincrement())
-
-  employeeProfileId Int
-  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
-
-  competencyId Int
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
-
-  currentScore    Float     @default(0)
-  confidence      Float     @default(0.5)
-  evidenceCount   Int       @default(0)
-  lastEvaluatedAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([employeeProfileId, competencyId])
-  @@index([employeeProfileId])
-  @@index([competencyId])
-}
-
-// ======================================================
-// 9. COMPETENCY HISTORY
-// ======================================================
-
-model CompetencyHistory {
-  id Int @id @default(autoincrement())
-
-  employeeProfileId Int
-  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
-
-  competencyId Int
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
-
-  previousScore Float
-  newScore      Float
-  confidence    Float                       @default(0.5)
-  changeReason  String?
-  sourceType    CompetencyHistorySourceType @default(DIAGNOSTIC_ASSESSMENT)
-  sourceId      String?
-
-  createdAt DateTime @default(now())
-
-  @@index([employeeProfileId])
-  @@index([competencyId])
-  @@index([createdAt])
-}
-
-// ======================================================
-// 10. AUTH SESSION
-// ======================================================
-
-model AuthSession {
-  id     String @id @default(uuid())
-  userId Int
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  refreshTokenHash String
-  expiresAt        DateTime
-  revokedAt        DateTime?
-  lastUsedAt       DateTime?
-  userAgent        String?
-  ipAddress        String?
-
-  createdAt DateTime @default(now())
-
-  @@index([userId])
-  @@index([refreshTokenHash])
-}
-
-// ======================================================
-// ASSESSMENT ENUMS
-// ======================================================
 
 enum AssessmentType {
   DIAGNOSTIC
@@ -603,147 +761,6 @@ enum AttemptStatus {
   ABANDONED
   EXPIRED
 }
-
-// ======================================================
-// 11. ASSESSMENT
-// ======================================================
-
-model Assessment {
-  id          Int              @id @default(autoincrement())
-  title       String
-  description String?
-  type        AssessmentType   @default(DIAGNOSTIC)
-  status      AssessmentStatus @default(PUBLISHED)
-
-  competencyId Int?
-  competency   Competency? @relation(fields: [competencyId], references: [id], onDelete: SetNull)
-
-  createdByUserId Int?
-  createdByUser   User? @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
-
-  timeLimitMinutes Int?
-  questionCount    Int     @default(10)
-  passingScore     Float?
-  adaptiveEnabled  Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  attempts AssessmentAttempt[]
-
-  @@index([competencyId])
-  @@index([type])
-  @@index([status])
-}
-
-// ======================================================
-// 12. ASSESSMENT QUESTION BANK ITEM
-// ======================================================
-
-model AssessmentQuestionBankItem {
-  id Int @id @default(autoincrement())
-
-  competencyId Int
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
-
-  questionText    String
-  questionType    String             @default("MCQ")
-  difficulty      QuestionDifficulty @default(MEDIUM)
-  options         Json
-  correctOption   String
-  explanation     String
-  sourceType      String             @default("CURATED_FRAMEWORK")
-  sourceReference String?
-
-  sourceMaterialId Int?
-  sourceMaterial   TrainingMaterial? @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
-
-  isActive   Boolean @default(true)
-  isVerified Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  answerAttempts AssessmentAnswerAttempt[]
-
-  generatedSource GeneratedQuestion? @relation("GeneratedQuestionQuestionBankItem")
-
-  @@index([competencyId])
-  @@index([difficulty])
-  @@index([isActive])
-  @@index([sourceMaterialId])
-}
-
-// ======================================================
-// 13. ASSESSMENT ATTEMPT
-// ======================================================
-
-model AssessmentAttempt {
-  id Int @id @default(autoincrement())
-
-  assessmentId Int?
-  assessment   Assessment? @relation(fields: [assessmentId], references: [id], onDelete: SetNull)
-
-  employeeProfileId Int
-  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
-
-  competencyId Int
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
-
-  status      AttemptStatus @default(IN_PROGRESS)
-  startedAt   DateTime      @default(now())
-  completedAt DateTime?
-
-  currentQuestionIndex Int                @default(0)
-  currentDifficulty    QuestionDifficulty @default(MEDIUM)
-  totalQuestions       Int                @default(10)
-  correctAnswers       Int                @default(0)
-  rawScore             Float              @default(0.0)
-
-  initialCompetencyScore Float?
-  finalCompetencyScore   Float?
-  durationSeconds        Int?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  answers AssessmentAnswerAttempt[]
-
-  @@index([employeeProfileId])
-  @@index([competencyId])
-  @@index([status])
-}
-
-// ======================================================
-// 14. ASSESSMENT ANSWER ATTEMPT
-// ======================================================
-
-model AssessmentAnswerAttempt {
-  id Int @id @default(autoincrement())
-
-  assessmentAttemptId Int
-  assessmentAttempt   AssessmentAttempt @relation(fields: [assessmentAttemptId], references: [id], onDelete: Cascade)
-
-  questionId Int
-  question   AssessmentQuestionBankItem @relation(fields: [questionId], references: [id], onDelete: Cascade)
-
-  selectedOption         String
-  isCorrect              Boolean
-  difficulty             QuestionDifficulty
-  responseTimeMs         Int?
-  attemptSequence        Int
-  estimatedMasteryBefore Float?
-  estimatedMasteryAfter  Float?
-
-  answeredAt DateTime @default(now())
-
-  @@index([assessmentAttemptId])
-  @@index([questionId])
-}
-
-// ======================================================
-// COURSE ENUMS
-// ======================================================
 
 enum ProviderStatus {
   ACTIVE
@@ -794,345 +811,4 @@ enum EnrollmentStatus {
 enum EnrollmentSource {
   LOCAL_PLATFORM_EVENT
   OFFICIAL_PROVIDER_SYNC
-}
-
-// ======================================================
-// 15. COURSE PROVIDER
-// ======================================================
-
-model CourseProvider {
-  id           Int            @id @default(autoincrement())
-  code         String         @unique
-  name         String
-  providerType String         @default("EXTERNAL_PLATFORM")
-  baseUrl      String?
-  status       ProviderStatus @default(ACTIVE)
-  capabilities Json?
-  lastSyncAt   DateTime?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-
-  courses  Course[]
-  syncRuns CourseSyncRun[]
-
-  @@index([code])
-  @@index([status])
-}
-
-// ======================================================
-// 16. COURSE
-// ======================================================
-
-model Course {
-  id Int @id @default(autoincrement())
-
-  providerId Int
-  provider   CourseProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-
-  externalId      String
-  title           String
-  description     String?
-  providerName    String
-  durationMinutes Int     @default(60)
-  language        String  @default("English")
-
-  difficultyLevel  CourseDifficulty @default(BEGINNER)
-  difficultySource DifficultySource @default(PROVIDER_METADATA)
-
-  courseUrl         String?
-  thumbnailUrl      String?
-  learningOutcomes  Json?
-  tags              Json?
-  prerequisitesText String?
-
-  isActive        Boolean   @default(true)
-  sourceUpdatedAt DateTime?
-  lastSyncedAt    DateTime  @default(now())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  competencyMappings CourseCompetency[]
-  prerequisites      CoursePrerequisite[]   @relation("CoursePrerequisites")
-  requiredByCourses  CoursePrerequisite[]   @relation("PrerequisiteCourse")
-  recommendations    CourseRecommendation[]
-  enrollments        TrainingEnrollment[]
-
-  @@unique([providerId, externalId])
-  @@index([providerId])
-  @@index([difficultyLevel])
-  @@index([isActive])
-}
-
-// ======================================================
-// 17. COURSE COMPETENCY
-// ======================================================
-
-model CourseCompetency {
-  id Int @id @default(autoincrement())
-
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
-  competencyId Int
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
-
-  relevanceScore     Float
-  mappingMethod      MappingMethod @default(SEMANTIC)
-  mappingReliability Float         @default(0.8)
-  evidence           String?
-  status             MappingStatus @default(APPROVED)
-
-  approvedByUserId Int?
-  approvedByUser   User?     @relation(fields: [approvedByUserId], references: [id], onDelete: SetNull)
-  approvedAt       DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([courseId, competencyId])
-  @@index([courseId])
-  @@index([competencyId])
-  @@index([status])
-  @@index([relevanceScore])
-}
-
-// ======================================================
-// 18. COURSE PREREQUISITE
-// ======================================================
-
-model CoursePrerequisite {
-  id Int @id @default(autoincrement())
-
-  courseId Int
-  course   Course @relation("CoursePrerequisites", fields: [courseId], references: [id], onDelete: Cascade)
-
-  prerequisiteCourseId Int?
-  prerequisiteCourse   Course? @relation("PrerequisiteCourse", fields: [prerequisiteCourseId], references: [id], onDelete: SetNull)
-
-  prerequisiteCompetencyId Int?
-  prerequisiteCompetency   Competency? @relation(fields: [prerequisiteCompetencyId], references: [id], onDelete: SetNull)
-
-  minimumCompetencyScore Float?
-
-  createdAt DateTime @default(now())
-
-  @@index([courseId])
-  @@index([prerequisiteCourseId])
-  @@index([prerequisiteCompetencyId])
-}
-
-// ======================================================
-// 19. COURSE SYNC RUN
-// ======================================================
-
-model CourseSyncRun {
-  id Int @id @default(autoincrement())
-
-  providerId Int
-  provider   CourseProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-
-  startedAt   DateTime   @default(now())
-  completedAt DateTime?
-  status      SyncStatus @default(SUCCESS)
-
-  itemsFetched Int     @default(0)
-  itemsCreated Int     @default(0)
-  itemsUpdated Int     @default(0)
-  itemsFailed  Int     @default(0)
-  errorSummary String?
-
-  @@index([providerId])
-  @@index([startedAt])
-}
-
-// ======================================================
-// 20. COURSE RECOMMENDATION
-// ======================================================
-
-model CourseRecommendation {
-  id Int @id @default(autoincrement())
-
-  employeeProfileId Int
-  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
-
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
-  competencyId Int
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
-
-  recommendationScore Float
-  rankingPosition     Int
-  reasons             Json
-
-  preCompetencyScore  Float?
-  postCompetencyScore Float?
-  outcomeImprovement  Float?
-
-  recommendedAt DateTime  @default(now())
-  acceptedAt    DateTime?
-  startedAt     DateTime?
-  completedAt   DateTime?
-
-  @@index([employeeProfileId])
-  @@index([courseId])
-  @@index([competencyId])
-  @@index([recommendedAt])
-}
-
-// ======================================================
-// 21. TRAINING ENROLLMENT
-// ======================================================
-
-model TrainingEnrollment {
-  id Int @id @default(autoincrement())
-
-  employeeProfileId Int
-  employeeProfile   EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
-
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
-  status           EnrollmentStatus @default(ENROLLED)
-  completionSource EnrollmentSource @default(LOCAL_PLATFORM_EVENT)
-
-  progressPercent Float  @default(0.0)
-  score           Float?
-
-  enrolledAt  DateTime  @default(now())
-  completedAt DateTime?
-  updatedAt   DateTime  @updatedAt
-
-  @@unique([employeeProfileId, courseId])
-  @@index([employeeProfileId])
-  @@index([courseId])
-  @@index([status])
-}
-
-// ======================================================
-// 22. TRAINING MATERIAL
-// Trainer uploaded learning / reference material
-// ======================================================
-
-model TrainingMaterial {
-  id Int @id @default(autoincrement())
-
-  title       String
-  description String?
-
-  originalFileName String
-  storedFileName   String
-  storagePath      String
-  mimeType         String
-  fileSizeBytes    Int
-  checksum         String?
-
-  status          MaterialProcessingStatus @default(UPLOADED)
-  processingError String?
-
-  pageCount     Int?
-  language      String  @default("English")
-  extractedText String?
-
-  competencyId Int?
-  competency   Competency? @relation(fields: [competencyId], references: [id], onDelete: SetNull)
-
-  uploadedByUserId Int
-  uploadedBy       User @relation("TrainingMaterialUploadedBy", fields: [uploadedByUserId], references: [id], onDelete: Restrict)
-
-  processedAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  chunks             MaterialChunk[]
-  generatedQuestions GeneratedQuestion[]
-  questionBankItems  AssessmentQuestionBankItem[]
-
-  @@index([uploadedByUserId])
-  @@index([competencyId])
-  @@index([status])
-  @@index([createdAt])
-}
-
-// ======================================================
-// 23. MATERIAL CHUNK
-// Page-aware chunks used during AI generation / future RAG
-// ======================================================
-
-model MaterialChunk {
-  id Int @id @default(autoincrement())
-
-  materialId Int
-  material   TrainingMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
-
-  chunkIndex Int
-  pageNumber Int?
-
-  text       String
-  tokenCount Int?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  generatedQuestions GeneratedQuestion[]
-
-  @@unique([materialId, chunkIndex])
-  @@index([materialId])
-  @@index([pageNumber])
-}
-
-// ======================================================
-// 24. GENERATED QUESTION
-// AI generated draft - requires Trainer review
-// ======================================================
-
-model GeneratedQuestion {
-  id Int @id @default(autoincrement())
-
-  materialId Int
-  material   TrainingMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
-
-  sourceChunkId Int?
-  sourceChunk   MaterialChunk? @relation(fields: [sourceChunkId], references: [id], onDelete: SetNull)
-
-  competencyId Int
-  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
-
-  questionText String
-  questionType String @default("MCQ")
-
-  difficulty QuestionDifficulty @default(MEDIUM)
-
-  options       Json
-  correctOption String
-  explanation   String
-
-  sourcePage    Int?
-  sourceExcerpt String?
-
-  generatorProvider String?
-  generatorModel    String?
-  confidence        Float?
-
-  status GeneratedQuestionReviewStatus @default(PENDING)
-
-  reviewNotes String?
-
-  reviewedByUserId Int?
-  reviewedBy       User? @relation("GeneratedQuestionReviewedBy", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
-
-  reviewedAt DateTime?
-
-  questionBankItemId Int?                        @unique
-  questionBankItem   AssessmentQuestionBankItem? @relation("GeneratedQuestionQuestionBankItem", fields: [questionBankItemId], references: [id], onDelete: SetNull)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([materialId])
-  @@index([sourceChunkId])
-  @@index([competencyId])
-  @@index([status])
-  @@index([reviewedByUserId])
 }
