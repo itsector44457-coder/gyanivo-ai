@@ -8,9 +8,9 @@
   "theme_color": "#1e40af",
   "icons": [
     {
-      "src": "/Disha_AI_Logo.svg",
+      "src": "/Disha_AI_Logo.png",
       "sizes": "any",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]

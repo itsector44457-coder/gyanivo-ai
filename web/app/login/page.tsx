@@ -381,7 +381,7 @@ export default function LoginPage() {
           >
             <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-md shadow-blue-500/10 p-0.5">
               <img
-                src="/Disha_AI_Logo.svg"
+                src="/Disha_AI_Logo.png"
                 alt="Disha AI Logo"
                 className="h-full w-full object-contain"
               />

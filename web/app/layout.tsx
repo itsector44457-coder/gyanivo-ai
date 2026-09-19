@@ -21,10 +21,10 @@ export const metadata: Metadata = {
   authors: [{ name: "Disha AI Team" }],
   icons: {
     icon: [
-      { url: "/Disha_AI_Logo.svg", type: "image/svg+xml" },
+      { url: "/Disha_AI_Logo.png", type: "image/png" },
     ],
-    shortcut: "/Disha_AI_Logo.svg",
-    apple: "/Disha_AI_Logo.svg",
+    shortcut: "/Disha_AI_Logo.png",
+    apple: "/Disha_AI_Logo.png",
   },
   manifest: "/manifest.json",
   openGraph: {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "Disha AI",
     images: [
       {
-        url: "/Disha_AI_Logo.svg",
+        url: "/Disha_AI_Logo.png",
         width: 1408,
         height: 768,
         alt: "Disha AI — MoSPI Competency Intelligence & Learning Platform",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     title: "Disha AI — MoSPI Competency Intelligence & Learning Platform",
     description:
       "AI-enabled Competency Intelligence, Adaptive Skill-Gap Analytics and Learning Platform for India's Official Statistical System (MoSPI).",
-    images: ["/Disha_AI_Logo.svg"],
+    images: ["/Disha_AI_Logo.png"],
   },
 };
 

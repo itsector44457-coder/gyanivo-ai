@@ -77,7 +77,7 @@ export default function Header() {
           >
             <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-md shadow-blue-500/10 transition duration-300 group-hover:scale-105 group-hover:shadow-blue-500/20">
               <img
-                src="/Disha_AI_Logo.svg"
+                src="/Disha_AI_Logo.png"
                 alt="Disha AI Logo"
                 className="h-full w-full object-contain p-0.5"
               />
