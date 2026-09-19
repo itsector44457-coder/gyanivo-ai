@@ -47,7 +47,7 @@ const features = [
       "Understand what skills an employee needs for their current role.",
 
     simple:
-      "Sketu AI first understands the employee's role and the competencies required to perform that job effectively.",
+      "Disha AI first understands the employee's role and the competencies required to perform that job effectively.",
 
     example:
       "Example: A Data Analyst may require Statistical Methods, Data Analysis, Survey Techniques and Data Visualization.",
@@ -71,7 +71,7 @@ const features = [
       "The employee takes a short assessment based on the competencies required for their role.",
 
     example:
-      "If the employee performs well in Data Analysis but struggles with Sampling Methods, Sketu AI captures that difference.",
+      "If the employee performs well in Data Analysis but struggles with Sampling Methods, Disha AI captures that difference.",
 
     result:
       "Measures the employee's current competency level.",
@@ -89,10 +89,10 @@ const features = [
       "Find exactly where the employee needs improvement.",
 
     simple:
-      "Sketu compares the required competency level with the employee's actual assessment performance.",
+      "Disha compares the required competency level with the employee's actual assessment performance.",
 
     example:
-      "Required Sampling competency = 80%, Current level = 45%. Sketu marks it as a high-priority skill gap.",
+      "Required Sampling competency = 80%, Current level = 45%. Disha marks it as a high-priority skill gap.",
 
     result:
       "Training focuses only on skills that actually need improvement.",
@@ -110,7 +110,7 @@ const features = [
       "Every employee receives a learning journey based on their own gaps.",
 
     simple:
-      "Instead of giving the same training to everyone, Sketu creates a different learning path for every employee.",
+      "Instead of giving the same training to everyone, Disha creates a different learning path for every employee.",
 
     example:
       "Employee A may receive Sampling → Survey Design while Employee B receives Python → Data Visualization.",
@@ -131,7 +131,7 @@ const features = [
       "Recommend relevant government learning resources for detected skill gaps.",
 
     simple:
-      "After identifying a gap, Sketu can map that competency to suitable courses and learning resources available through iGOT Karmayogi.",
+      "After identifying a gap, Disha can map that competency to suitable courses and learning resources available through iGOT Karmayogi.",
 
     example:
       "Sampling Methods gap → recommend an appropriate survey methodology course.",
@@ -152,7 +152,7 @@ const features = [
       "Question difficulty changes according to the learner's performance.",
 
     simple:
-      "Sketu does not give every learner exactly the same fixed assessment. It adjusts the next question according to previous answers.",
+      "Disha does not give every learner exactly the same fixed assessment. It adjusts the next question according to previous answers.",
 
     example:
       "Correct medium question → harder question. Wrong question → easier or concept-focused question.",
@@ -194,7 +194,7 @@ const features = [
       "Track whether a learner actually understands a competency over time.",
 
     simple:
-      "Sketu does not judge mastery from only one score. It keeps updating the learner's estimated knowledge as more answers are submitted.",
+      "Disha does not judge mastery from only one score. It keeps updating the learner's estimated knowledge as more answers are submitted.",
 
     example:
       "Repeated correct answers increase mastery confidence; repeated mistakes reduce it.",
@@ -245,7 +245,7 @@ const workflow = [
   {
     number: "03",
     title: "AI Analysis",
-    text: "Sketu compares required competency with actual performance.",
+    text: "Disha compares required competency with actual performance.",
     icon: BrainCircuit,
   },
 
@@ -333,7 +333,7 @@ export default function FeaturesPage() {
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-4 py-2 text-xs font-bold text-blue-700 shadow-sm backdrop-blur">
                 <Sparkles className="h-4 w-4" />
 
-                Sketu AI Features
+                Disha AI Features
 
                 <span className="h-1 w-1 rounded-full bg-blue-400" />
 
@@ -350,7 +350,7 @@ export default function FeaturesPage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-                Sketu AI understands what an employee
+                Disha AI understands what an employee
                 <strong className="font-bold text-slate-800">
                   {" "}
                   needs to know
@@ -395,7 +395,7 @@ export default function FeaturesPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs font-semibold text-slate-400">
-                      Sketu AI
+                      Disha AI
                     </p>
 
                     <h3 className="mt-1 text-lg font-black">
@@ -487,7 +487,7 @@ export default function FeaturesPage() {
               </p>
 
               <h2 className="mt-2 text-3xl font-black">
-                What exactly does Sketu AI do?
+                What exactly does Disha AI do?
               </h2>
             </div>
 
@@ -496,7 +496,7 @@ export default function FeaturesPage() {
                 Think of
                 <span className="font-black text-blue-700">
                   {" "}
-                  Sketu AI
+                  Disha AI
                 </span>{" "}
                 like a personal skill coach for government employees.
               </p>
@@ -550,7 +550,7 @@ export default function FeaturesPage() {
 
             <p className="mt-5 max-w-2xl leading-7 text-slate-500">
               No complicated AI jargon. Here is exactly what every part of
-              Sketu AI does and why it matters.
+              Disha AI does and why it matters.
             </p>
           </div>
 
@@ -655,7 +655,7 @@ export default function FeaturesPage() {
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-500">
-            Sketu AI is not a collection of separate features. Each feature
+            Disha AI is not a collection of separate features. Each feature
             passes intelligence to the next step.
           </p>
         </div>
@@ -715,7 +715,7 @@ export default function FeaturesPage() {
               </h3>
 
               <p className="mt-4 text-sm leading-7 text-blue-100/70">
-                See how Sketu turns one assessment into a complete learning
+                See how Disha turns one assessment into a complete learning
                 journey.
               </p>
             </div>
@@ -779,7 +779,7 @@ export default function FeaturesPage() {
               </h2>
 
               <p className="mt-5 max-w-xl text-sm leading-7 text-slate-500">
-                Users do not need to understand AI models. Sketu handles the
+                Users do not need to understand AI models. Disha handles the
                 intelligence in the background while keeping the user
                 experience simple.
               </p>
@@ -904,7 +904,7 @@ export default function FeaturesPage() {
 
             <div>
               <span className="rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200">
-                Why Sketu AI?
+                Why Disha AI?
               </span>
 
               <h2 className="mt-5 text-3xl font-black sm:text-4xl">
@@ -916,7 +916,7 @@ export default function FeaturesPage() {
               </h2>
 
               <p className="mt-5 text-sm leading-7 text-blue-100/70">
-                Traditional LMS platforms mainly deliver courses. Sketu AI
+                Traditional LMS platforms mainly deliver courses. Disha AI
                 first understands the skill gap and then decides what learning
                 should happen.
               </p>
@@ -927,31 +927,31 @@ export default function FeaturesPage() {
               <ComparisonRow
                 label="Training"
                 normal="Same training for everyone"
-                sketu="Personalized by skill gap"
+                disha="Personalized by skill gap"
               />
 
               <ComparisonRow
                 label="Assessment"
                 normal="Fixed difficulty"
-                sketu="Adaptive difficulty"
+                disha="Adaptive difficulty"
               />
 
               <ComparisonRow
                 label="Questions"
                 normal="Created manually"
-                sketu="AI generated from material"
+                disha="AI generated from material"
               />
 
               <ComparisonRow
                 label="Progress"
                 normal="Only course completion"
-                sketu="Actual competency mastery"
+                disha="Actual competency mastery"
               />
 
               <ComparisonRow
                 label="Recommendation"
                 normal="Generic course catalogue"
-                sketu="Role + gap based learning"
+                disha="Role + gap based learning"
               />
 
             </div>
@@ -975,7 +975,7 @@ export default function FeaturesPage() {
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-200">
                 <ShieldCheck className="h-4 w-4" />
 
-                Sketu AI • SIH26101
+                Disha AI • SIH26101
               </div>
 
               <h2 className="mt-4 max-w-3xl text-3xl font-black sm:text-4xl">
@@ -1147,11 +1147,11 @@ function RoleCard({
 function ComparisonRow({
   label,
   normal,
-  sketu,
+  disha,
 }: {
   label: string;
   normal: string;
-  sketu: string;
+  disha: string;
 }) {
   return (
     <div className="grid border-b border-white/10 last:border-b-0 sm:grid-cols-[.5fr_1fr_1fr]">
@@ -1172,14 +1172,14 @@ function ComparisonRow({
 
       <div className="border-t border-white/10 bg-blue-500/[0.07] p-4 sm:border-l sm:border-t-0 sm:p-5">
         <p className="mb-1 text-[9px] font-bold uppercase tracking-widest text-cyan-300">
-          Sketu AI
+          Disha AI
         </p>
 
         <div className="flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4 shrink-0 text-cyan-300" />
 
           <p className="text-xs font-semibold text-white">
-            {sketu}
+            {disha}
           </p>
         </div>
       </div>

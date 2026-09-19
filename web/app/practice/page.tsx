@@ -404,7 +404,7 @@ export default function PracticePage() {
           </div>
 
           <h2 className="mt-5 text-lg font-semibold text-slate-900">
-            Sketu AI is preparing your question
+            Disha AI is preparing your question
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
@@ -486,7 +486,7 @@ export default function PracticePage() {
 
             <div>
               <h1 className="font-bold tracking-tight text-slate-950">
-                Sketu AI
+                Disha AI
               </h1>
 
               <p className="text-xs text-slate-500">
@@ -528,7 +528,7 @@ export default function PracticePage() {
             </h2>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-              Sketu AI is adjusting your questions in real time based on your mistakes, speed and concept mastery.
+              Disha AI is adjusting your questions in real time based on your mistakes, speed and concept mastery.
             </p>
           </div>
 
@@ -650,7 +650,7 @@ export default function PracticePage() {
                   </h3>
 
                   <p className="mt-4 text-sm leading-6 text-slate-600">
-                    Solve it one step at a time. Sketu AI checks your method, not just the final answer.
+                    Solve it one step at a time. Disha AI checks your method, not just the final answer.
                   </p>
                 </div>
               </div>
@@ -897,7 +897,7 @@ export default function PracticePage() {
                 </div>
 
                 <h3 className="mt-5 text-xl font-bold">
-                  Sketu AI Tutor
+                  Disha AI Tutor
                 </h3>
 
                 <p className="mt-2 text-sm leading-6 text-slate-300">
@@ -979,7 +979,7 @@ export default function PracticePage() {
                 .weakestSkill && (
                 <>
                   <p className="mt-2 text-sm leading-6 text-slate-500">
-                    Sketu AI is selecting more questions around this skill to strengthen your understanding.
+                    Disha AI is selecting more questions around this skill to strengthen your understanding.
                   </p>
 
                   <div className="mt-5">

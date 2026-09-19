@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   ShieldCheck,
+  QrCode,
 } from "lucide-react";
 
 const navLinks = [
@@ -48,9 +49,19 @@ export default function Header() {
             </span>
           </div>
 
-          <div className="hidden items-center gap-2 text-xs font-medium text-slate-600 md:flex">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-            Smart India Hackathon
+          <div className="flex items-center gap-3 text-xs font-medium text-slate-600">
+            <Link
+              href="/qr"
+              className="inline-flex items-center gap-1.5 rounded-md bg-white border border-blue-200 px-2 py-0.5 text-[10px] font-bold text-blue-700 hover:bg-blue-50 transition shadow-2xs"
+            >
+              <QrCode className="h-3 w-3 text-blue-600" />
+              <span>Mobile QR</span>
+            </Link>
+
+            <div className="hidden items-center gap-2 md:flex">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+              Smart India Hackathon
+            </div>
           </div>
         </div>
       </div>
@@ -73,7 +84,7 @@ export default function Header() {
             <div className="leading-none">
               <div className="flex items-center gap-2">
                 <span className="text-xl font-extrabold tracking-tight text-slate-950 sm:text-[22px]">
-                  Sketu
+                  Disha
                   <span className="ml-1 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
                     AI
                   </span>

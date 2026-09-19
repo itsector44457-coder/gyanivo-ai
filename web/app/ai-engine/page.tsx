@@ -72,7 +72,7 @@ export default function AiEnginePage() {
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h1 className="font-extrabold text-sm text-slate-900">Sketu AI Engine Lab</h1>
+                <h1 className="font-extrabold text-sm text-slate-900">Disha AI Engine Lab</h1>
                 <span className="text-[9px] font-bold bg-indigo-50 text-indigo-700 px-1.5 py-0.2 rounded border border-indigo-200">
                   Psychometrics & RAG
                 </span>
@@ -105,7 +105,7 @@ export default function AiEnginePage() {
         <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 text-white shadow-xl space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 border border-blue-400/30 px-3 py-1 text-xs font-semibold text-blue-300">
             <Zap className="h-3.5 w-3.5 text-amber-300" />
-            <span>Mathematical & Psychometric Core of Sketu AI</span>
+            <span>Mathematical & Psychometric Core of Disha AI</span>
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
@@ -113,7 +113,7 @@ export default function AiEnginePage() {
           </h2>
 
           <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
-            Sketu AI combines <strong>3-Parameter Logistic Item Response Theory (3PL-IRT)</strong> with dense semantic embeddings to deliver adaptive competency evaluations that minimize officer test fatigue while guaranteeing 100% source-traceable questions from official MoSPI manuals.
+            Disha AI combines <strong>3-Parameter Logistic Item Response Theory (3PL-IRT)</strong> with dense semantic embeddings to deliver adaptive competency evaluations that minimize officer test fatigue while guaranteeing 100% source-traceable questions from official MoSPI manuals.
           </p>
         </div>
 
@@ -227,7 +227,7 @@ export default function AiEnginePage() {
               Document Ingestion & Citation Pipeline Architecture
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              How Sketu AI transforms 500+ page official PDFs into psychometrically verified questions with 0% hallucination.
+              How Disha AI transforms 500+ page official PDFs into psychometrically verified questions with 0% hallucination.
             </p>
           </div>
 

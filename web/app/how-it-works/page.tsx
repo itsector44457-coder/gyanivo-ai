@@ -44,7 +44,7 @@ const mainFlow = [
     number: "01",
     icon: UserCog,
     title: "Understand the Employee",
-    text: "Sketu identifies the employee's role and the competencies required for that role.",
+    text: "Disha identifies the employee's role and the competencies required for that role.",
   },
   {
     number: "02",
@@ -86,7 +86,7 @@ const detailedSteps = [
       "Every learning journey starts by understanding what an employee is expected to know for their role.",
 
     howItWorks: [
-      "Employee signs in to Sketu AI.",
+      "Employee signs in to Disha AI.",
       "System identifies department, designation and assigned role.",
       "Role is mapped with required competencies.",
       "Each competency receives an expected proficiency level.",
@@ -104,7 +104,7 @@ const detailedSteps = [
     title: "Diagnostic Assessment",
     badge: "Know Current Level",
     description:
-      "Sketu checks what the employee already knows before recommending any training.",
+      "Disha checks what the employee already knows before recommending any training.",
 
     howItWorks: [
       "Questions are selected from competency-specific question banks.",
@@ -125,7 +125,7 @@ const detailedSteps = [
     title: "Adaptive Assessment Engine",
     badge: "Smart Assessment",
     description:
-      "Instead of giving everyone the same fixed paper, Sketu adjusts question difficulty according to performance.",
+      "Instead of giving everyone the same fixed paper, Disha adjusts question difficulty according to performance.",
 
     howItWorks: [
       "Assessment begins with a medium-level question.",
@@ -146,7 +146,7 @@ const detailedSteps = [
     title: "AI Competency Gap Detection",
     badge: "Find The Gap",
     description:
-      "Sketu compares what the role requires with what the employee currently demonstrates.",
+      "Disha compares what the role requires with what the employee currently demonstrates.",
 
     howItWorks: [
       "Required proficiency is fetched from the role framework.",
@@ -167,7 +167,7 @@ const detailedSteps = [
     title: "Personalized Learning Path",
     badge: "Learn What Matters",
     description:
-      "Sketu creates a learning path specifically for the employee instead of assigning generic training.",
+      "Disha creates a learning path specifically for the employee instead of assigning generic training.",
 
     howItWorks: [
       "High-priority gaps are addressed first.",
@@ -231,7 +231,7 @@ const detailedSteps = [
     title: "Knowledge Mastery Tracking",
     badge: "Continuous Intelligence",
     description:
-      "Sketu continuously estimates whether the employee has actually mastered each competency.",
+      "Disha continuously estimates whether the employee has actually mastered each competency.",
 
     howItWorks: [
       "Every answer updates the learner's competency state.",
@@ -343,7 +343,7 @@ export default function HowItWorksPage() {
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-4 py-2 text-xs font-bold text-blue-700 shadow-sm backdrop-blur">
                 <BrainCircuit className="h-4 w-4" />
 
-                How Sketu AI Works
+                How Disha AI Works
 
                 <span className="h-1 w-1 rounded-full bg-blue-400" />
 
@@ -360,7 +360,7 @@ export default function HowItWorksPage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-                Sketu AI continuously understands the employee, assesses their
+                Disha AI continuously understands the employee, assesses their
                 knowledge, identifies competency gaps, recommends the right
                 learning and measures whether actual improvement happened.
               </p>
@@ -410,7 +410,7 @@ export default function HowItWorksPage() {
                 <div className="mb-6 flex items-center justify-between">
                   <div>
                     <p className="text-xs font-semibold text-slate-400">
-                      Sketu Intelligence Loop
+                      Disha Intelligence Loop
                     </p>
 
                     <h3 className="mt-1 text-lg font-black">
@@ -523,7 +523,7 @@ export default function HowItWorksPage() {
               </p>
 
               <h2 className="mt-2 text-3xl font-black">
-                Think of Sketu AI as a personal skill coach.
+                Think of Disha AI as a personal skill coach.
               </h2>
             </div>
 
@@ -610,7 +610,7 @@ export default function HowItWorksPage() {
               </h2>
 
               <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-500">
-                Sketu does not stop after recommending a course. It continuously
+                Disha does not stop after recommending a course. It continuously
                 reassesses the employee and updates their learning journey.
               </p>
             </div>
@@ -826,7 +826,7 @@ export default function HowItWorksPage() {
 
                 <p className="mt-5 max-w-xl text-sm leading-7 text-blue-100/70">
                   Two employees do not need to follow exactly the same difficulty
-                  path. Sketu dynamically adjusts questions according to
+                  path. Disha dynamically adjusts questions according to
                   performance.
                 </p>
               </div>
@@ -934,7 +934,7 @@ export default function HowItWorksPage() {
             </h2>
 
             <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-500">
-              Sketu uses uploaded learning material as the knowledge source so AI
+              Disha uses uploaded learning material as the knowledge source so AI
               questions remain grounded in the provided content.
             </p>
           </div>
@@ -1031,7 +1031,7 @@ export default function HowItWorksPage() {
               </h2>
 
               <p className="mt-5 max-w-xl text-sm leading-7 text-slate-500">
-                Sketu keeps updating the estimated mastery of a competency as the
+                Disha keeps updating the estimated mastery of a competency as the
                 employee answers more questions.
               </p>
 
@@ -1152,7 +1152,7 @@ export default function HowItWorksPage() {
                 </h2>
 
                 <p className="mt-5 text-sm leading-7 text-blue-100/80">
-                  Rahul&apos;s complete Sketu AI journey can be understood in
+                  Rahul&apos;s complete Disha AI journey can be understood in
                   less than a minute.
                 </p>
 
@@ -1207,7 +1207,7 @@ export default function HowItWorksPage() {
                   <StoryStep
                     number="4"
                     title="Gap Detected"
-                    text="Sketu detects a 35% high-priority competency gap."
+                    text="Disha detects a 35% high-priority competency gap."
                   />
 
                   <StoryStep
@@ -1402,7 +1402,7 @@ export default function HowItWorksPage() {
               <Sparkles className="mx-auto h-7 w-7 text-cyan-300" />
 
               <p className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-blue-300">
-                The Sketu AI Loop
+                The Disha AI Loop
               </p>
 
               <h2 className="mx-auto mt-3 max-w-4xl text-3xl font-black sm:text-4xl">
@@ -1462,11 +1462,11 @@ export default function HowItWorksPage() {
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-200">
                   <ShieldCheck className="h-4 w-4" />
 
-                  Sketu AI • SIH26101
+                  Disha AI • SIH26101
                 </div>
 
                 <h2 className="mt-4 max-w-3xl text-3xl font-black sm:text-4xl">
-                  Now see Sketu AI in action.
+                  Now see Disha AI in action.
                 </h2>
 
                 <p className="mt-3 max-w-xl text-sm leading-7 text-blue-100">

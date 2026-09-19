@@ -61,7 +61,7 @@ export default function AssessmentsPage() {
             </span>
           </h1>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Move beyond static MCQs. Sketu AI implements modern Item Response Theory (IRT) and Automated Question Synthesis to measure true officer competence with mathematical precision.
+            Move beyond static MCQs. Disha AI implements modern Item Response Theory (IRT) and Automated Question Synthesis to measure true officer competence with mathematical precision.
           </p>
         </div>
 

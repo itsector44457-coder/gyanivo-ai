@@ -21,7 +21,7 @@ export default function ContactPage() {
             Contact Support & Liaison
           </h1>
           <p className="text-xs sm:text-sm text-slate-600">
-            Reach out to the Sketu AI technical coordination team or the National Statistical Systems Training Academy (NSSTA).
+            Reach out to the Disha AI technical coordination team or the National Statistical Systems Training Academy (NSSTA).
           </p>
         </div>
 
@@ -37,8 +37,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <div className="font-bold text-slate-900">Technical Support Email</div>
-                  <a href="mailto:support@sketu.ai" className="text-blue-600 hover:underline">
-                    support@sketu.ai
+                  <a href="mailto:support@disha.ai" className="text-blue-600 hover:underline">
+                    support@disha.ai
                   </a>
                 </div>
               </div>

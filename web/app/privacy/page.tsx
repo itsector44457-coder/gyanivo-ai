@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         </p>
         <div className="space-y-4 text-xs sm:text-sm text-slate-600 bg-white p-8 rounded-3xl border border-slate-200">
           <p>
-            Sketu AI processes officer competency scores, assessment answers, and training progress strictly within authorized MoSPI boundary controls. No personally identifiable officer information (PII) is shared with third-party external LLM APIs.
+            Disha AI processes officer competency scores, assessment answers, and training progress strictly within authorized MoSPI boundary controls. No personally identifiable officer information (PII) is shared with third-party external LLM APIs.
           </p>
           <p>
             All generated questions, evaluation items, and session logs are encrypted in transit via TLS 1.3 and at rest with AES-256 standards.

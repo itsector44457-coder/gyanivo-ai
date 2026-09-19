@@ -52,7 +52,7 @@ export default function CopilotPage() {
     {
       id: "msg-welcome",
       sender: "ai",
-      text: "Namaste Officer! I am **Sketu AI Copilot**, your official competency and knowledge assistant for the Ministry of Statistics and Programme Implementation (MoSPI).\n\nI can explain official statistical methodologies, help you prepare for cadre assessments, synthesize practice problems, or cite exact pages from NSSTA training manuals. How can I assist your capacity development today?",
+      text: "Namaste Officer! I am **Disha AI Copilot**, your official competency and knowledge assistant for the Ministry of Statistics and Programme Implementation (MoSPI).\n\nI can explain official statistical methodologies, help you prepare for cadre assessments, synthesize practice problems, or cite exact pages from NSSTA training manuals. How can I assist your capacity development today?",
       timestamp: "Just now",
       suggestedActions: [
         "Explain Survey Stratification",
@@ -218,7 +218,7 @@ export default function CopilotPage() {
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h1 className="font-extrabold text-sm text-slate-900">Sketu AI Copilot</h1>
+                <h1 className="font-extrabold text-sm text-slate-900">Disha AI Copilot</h1>
                 <span className="text-[9px] font-bold bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded border border-blue-200">
                   MoSPI RAG
                 </span>
@@ -359,7 +359,7 @@ export default function CopilotPage() {
               </div>
               <div className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-500 text-xs flex items-center gap-2 shadow-xs">
                 <RefreshCw className="h-4 w-4 text-blue-600 animate-spin" />
-                <span>Sketu AI is verifying citations against MoSPI manuals...</span>
+                <span>Disha AI is verifying citations against MoSPI manuals...</span>
               </div>
             </div>
           )}
@@ -410,7 +410,7 @@ export default function CopilotPage() {
           </form>
 
           <p className="text-center text-[10px] text-slate-500">
-            Sketu AI synthesizes knowledge from MoSPI Gazette, NSSTA training curricula, and verified field manuals. Zero-hallucination citation guard active.
+            Disha AI synthesizes knowledge from MoSPI Gazette, NSSTA training curricula, and verified field manuals. Zero-hallucination citation guard active.
           </p>
         </div>
       </div>

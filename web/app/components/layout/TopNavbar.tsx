@@ -282,7 +282,7 @@ export function TopNavbar({ onToggleMobileSidebar }: TopNavbarProps) {
       <Modal
         isOpen={showHelpModal}
         onClose={() => setShowHelpModal(false)}
-        title="Sketu AI — Platform Guidance"
+        title="Disha AI — Platform Guidance"
         maxWidth="lg"
       >
         <div className="space-y-4 text-xs text-slate-600">

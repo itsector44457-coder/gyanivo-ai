@@ -346,7 +346,7 @@ export default function HomePage() {
 
             <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-7 text-white lg:p-10">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-100">
-                How Sketu AI Solves It
+                How Disha AI Solves It
               </p>
 
               <h2 className="mt-3 text-3xl font-black">
@@ -574,7 +574,7 @@ export default function HomePage() {
               </h2>
 
               <p className="mt-5 text-base leading-8 text-slate-500">
-                Sketu AI continuously analyzes competency scores, learning
+                Disha AI continuously analyzes competency scores, learning
                 activities and assessments to highlight strengths, gaps and
                 improvement areas.
               </p>
@@ -779,7 +779,7 @@ export default function HomePage() {
 
               <p className="mt-3 max-w-xl text-sm leading-7 text-blue-100">
                 Assess. Learn. Improve. Build a stronger data-driven India
-                with Sketu AI.
+                with Disha AI.
               </p>
             </div>
 

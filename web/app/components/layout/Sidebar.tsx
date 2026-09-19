@@ -59,7 +59,7 @@ export function Sidebar({
 
   const employeeLinks = [
     { href: "/employee/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/copilot", label: "Sketu AI Copilot", icon: Bot, badge: "AI" },
+    { href: "/copilot", label: "Disha AI Copilot", icon: Bot, badge: "AI" },
     { href: "/employee/competencies", label: "Competency Index", icon: Award },
     { href: "/employee/skill-gaps", label: "Skill Gap Analysis", icon: AlertTriangle, badge: "Gaps" },
     { href: "/employee/learning-path", label: "Adaptive Path", icon: Compass },
@@ -149,7 +149,7 @@ export function Sidebar({
             </div>
             <div className="min-w-0">
               <h1 className="text-sm font-black tracking-tight text-white flex items-center gap-1.5">
-                Sketu AI
+                Disha AI
                 <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30">
                   MoSPI
                 </span>

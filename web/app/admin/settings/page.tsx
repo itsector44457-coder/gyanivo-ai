@@ -188,7 +188,7 @@ export default function AdminSettingsPage() {
           <h2 className="text-sm font-bold text-slate-800">System Information</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-          <div><p className="text-slate-500">Platform</p><p className="font-bold text-slate-800">Sketu AI v1.0</p></div>
+          <div><p className="text-slate-500">Platform</p><p className="font-bold text-slate-800">Disha AI v1.0</p></div>
           <div><p className="text-slate-500">SIH Problem</p><p className="font-bold text-slate-800">SIH26101</p></div>
           <div><p className="text-slate-500">Ministry</p><p className="font-bold text-slate-800">MoSPI</p></div>
           <div><p className="text-slate-500">Build Type</p><p className="font-bold text-amber-700">Prototype Demo</p></div>

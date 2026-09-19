@@ -269,7 +269,7 @@ model StudentSkillMastery {
 }
 
 // ======================================================
-// ENTERPRISE SIH26101 CORE MODELS (PHASE 1)
+// ENTERPRISE SIH26101 CORE MODELS
 // ======================================================
 
 enum SystemRole {
@@ -290,6 +290,24 @@ enum CompetencyHistorySourceType {
   MANUAL_APPROVED_ADJUSTMENT
   MIGRATION
   SYSTEM_RECALCULATION
+}
+
+// ======================================================
+// TRAINER / AI MATERIAL ENUMS
+// ======================================================
+
+enum MaterialProcessingStatus {
+  UPLOADED
+  PROCESSING
+  READY
+  FAILED
+  ARCHIVED
+}
+
+enum GeneratedQuestionReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 // ======================================================
@@ -314,6 +332,9 @@ model User {
   createdAssessments     Assessment[]
   approvedCourseMappings CourseCompetency[]
 
+  uploadedTrainingMaterials  TrainingMaterial[]  @relation("TrainingMaterialUploadedBy")
+  reviewedGeneratedQuestions GeneratedQuestion[] @relation("GeneratedQuestionReviewedBy")
+
   @@index([email])
   @@index([systemRole])
 }
@@ -329,7 +350,7 @@ model EmployeeProfile {
 
   employeeCode             String? @unique
   designation              String
-  cadre                    String? // e.g. "SSS Cadre", "ISS Cadre", "Technical"
+  cadre                    String?
   currentAssignment        String?
   educationalQualification String?
   experienceYears          Float   @default(0)
@@ -359,7 +380,7 @@ model EmployeeProfile {
 
 model Department {
   id          Int      @id @default(autoincrement())
-  code        String   @unique // e.g. "NSO", "FOD", "SDRD", "ESD", "CPD"
+  code        String   @unique
   name        String
   description String?
   isActive    Boolean  @default(true)
@@ -376,10 +397,10 @@ model Department {
 
 model JobRole {
   id          Int     @id @default(autoincrement())
-  code        String  @unique // e.g. "STAT_OFFICER", "SR_STAT_OFFICER", "DATA_ANALYST"
+  code        String  @unique
   name        String
   description String?
-  level       Int? // Cadre hierarchy level
+  level       Int?
   isActive    Boolean @default(true)
 
   departmentId Int?
@@ -400,7 +421,7 @@ model JobRole {
 
 model CompetencyDomain {
   id          Int      @id @default(autoincrement())
-  code        String   @unique // e.g. "STATISTICAL", "TECHNICAL", "DIGITAL_GOVERNANCE", "BEHAVIOURAL_MANAGERIAL"
+  code        String   @unique
   name        String
   description String?
   createdAt   DateTime @default(now())
@@ -415,7 +436,7 @@ model CompetencyDomain {
 
 model Competency {
   id          Int     @id @default(autoincrement())
-  code        String  @unique // e.g. "TECH_PYTHON", "STAT_SAMPLING", "TECH_GIS"
+  code        String  @unique
   name        String
   description String?
 
@@ -443,12 +464,15 @@ model Competency {
   prerequisites        CoursePrerequisite[]
   recommendations      CourseRecommendation[]
 
+  trainingMaterials  TrainingMaterial[]
+  generatedQuestions GeneratedQuestion[]
+
   @@index([domainId])
   @@index([parentCompetencyId])
 }
 
 // ======================================================
-// 7. ROLE COMPETENCY REQUIREMENT (MATRIX)
+// 7. ROLE COMPETENCY REQUIREMENT
 // ======================================================
 
 model RoleCompetencyRequirement {
@@ -460,11 +484,11 @@ model RoleCompetencyRequirement {
   competencyId Int
   competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
 
-  requiredScore   Float // Benchmark target score (0-100)
+  requiredScore   Float
   priorityWeight  Float     @default(1.0)
   isMandatory     Boolean   @default(true)
-  minimumScore    Float? // Absolute minimum score threshold
-  sourceReference String? // e.g. "NSSTA 2026 Cadre Directive"
+  minimumScore    Float?
+  sourceReference String?
   approvedAt      DateTime?
 
   createdAt DateTime @default(now())
@@ -476,7 +500,7 @@ model RoleCompetencyRequirement {
 }
 
 // ======================================================
-// 8. EMPLOYEE COMPETENCY (CURRENT SCORE)
+// 8. EMPLOYEE COMPETENCY
 // ======================================================
 
 model EmployeeCompetency {
@@ -488,8 +512,8 @@ model EmployeeCompetency {
   competencyId Int
   competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
 
-  currentScore    Float     @default(0) // 0-100 proficiency score
-  confidence      Float     @default(0.5) // Statistical confidence (0-1)
+  currentScore    Float     @default(0)
+  confidence      Float     @default(0.5)
   evidenceCount   Int       @default(0)
   lastEvaluatedAt DateTime?
 
@@ -502,7 +526,7 @@ model EmployeeCompetency {
 }
 
 // ======================================================
-// 9. COMPETENCY HISTORY (AUDITABLE PROGRESSION LOG)
+// 9. COMPETENCY HISTORY
 // ======================================================
 
 model CompetencyHistory {
@@ -519,7 +543,7 @@ model CompetencyHistory {
   confidence    Float                       @default(0.5)
   changeReason  String?
   sourceType    CompetencyHistorySourceType @default(DIAGNOSTIC_ASSESSMENT)
-  sourceId      String? // ID of assessment attempt or evaluation record
+  sourceId      String?
 
   createdAt DateTime @default(now())
 
@@ -529,7 +553,7 @@ model CompetencyHistory {
 }
 
 // ======================================================
-// 10. AUTH SESSION (REFRESH TOKEN PERSISTENCE)
+// 10. AUTH SESSION
 // ======================================================
 
 model AuthSession {
@@ -551,7 +575,7 @@ model AuthSession {
 }
 
 // ======================================================
-// ENTERPRISE PHASE 3 ASSESSMENT ENUMS
+// ASSESSMENT ENUMS
 // ======================================================
 
 enum AssessmentType {
@@ -581,7 +605,7 @@ enum AttemptStatus {
 }
 
 // ======================================================
-// 11. ASSESSMENT (TEST/SESSION DEFINITION)
+// 11. ASSESSMENT
 // ======================================================
 
 model Assessment {
@@ -597,9 +621,9 @@ model Assessment {
   createdByUserId Int?
   createdByUser   User? @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
 
-  timeLimitMinutes Int? // Optional timer
+  timeLimitMinutes Int?
   questionCount    Int     @default(10)
-  passingScore     Float? // Benchmark percentage threshold
+  passingScore     Float?
   adaptiveEnabled  Boolean @default(true)
 
   createdAt DateTime @default(now())
@@ -613,7 +637,7 @@ model Assessment {
 }
 
 // ======================================================
-// 12. ASSESSMENT QUESTION BANK ITEM (COMPETENCY MCQ BANK)
+// 12. ASSESSMENT QUESTION BANK ITEM
 // ======================================================
 
 model AssessmentQuestionBankItem {
@@ -625,26 +649,33 @@ model AssessmentQuestionBankItem {
   questionText    String
   questionType    String             @default("MCQ")
   difficulty      QuestionDifficulty @default(MEDIUM)
-  options         Json // [{ "id": "A", "text": "..." }, { "id": "B", "text": "..." }]
-  correctOption   String // "A", "B", "C", or "D" (server-side only)
+  options         Json
+  correctOption   String
   explanation     String
   sourceType      String             @default("CURATED_FRAMEWORK")
-  sourceReference String? // e.g. "MoSPI Sampling Handbook 2026"
-  isActive        Boolean            @default(true)
-  isVerified      Boolean            @default(true)
+  sourceReference String?
+
+  sourceMaterialId Int?
+  sourceMaterial   TrainingMaterial? @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
+
+  isActive   Boolean @default(true)
+  isVerified Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   answerAttempts AssessmentAnswerAttempt[]
 
+  generatedSource GeneratedQuestion? @relation("GeneratedQuestionQuestionBankItem")
+
   @@index([competencyId])
   @@index([difficulty])
   @@index([isActive])
+  @@index([sourceMaterialId])
 }
 
 // ======================================================
-// 13. ASSESSMENT ATTEMPT (SESSION INSTANCE)
+// 13. ASSESSMENT ATTEMPT
 // ======================================================
 
 model AssessmentAttempt {
@@ -667,11 +698,11 @@ model AssessmentAttempt {
   currentDifficulty    QuestionDifficulty @default(MEDIUM)
   totalQuestions       Int                @default(10)
   correctAnswers       Int                @default(0)
-  rawScore             Float              @default(0.0) // Percentage 0-100
+  rawScore             Float              @default(0.0)
 
-  initialCompetencyScore Float? // Score before diagnostic attempt
-  finalCompetencyScore   Float? // Score after diagnostic attempt
-  durationSeconds        Int? // Total time spent
+  initialCompetencyScore Float?
+  finalCompetencyScore   Float?
+  durationSeconds        Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -684,7 +715,7 @@ model AssessmentAttempt {
 }
 
 // ======================================================
-// 14. ASSESSMENT ANSWER ATTEMPT (GRANULAR STEP EVIDENCE)
+// 14. ASSESSMENT ANSWER ATTEMPT
 // ======================================================
 
 model AssessmentAnswerAttempt {
@@ -699,8 +730,8 @@ model AssessmentAnswerAttempt {
   selectedOption         String
   isCorrect              Boolean
   difficulty             QuestionDifficulty
-  responseTimeMs         Int? // millisecond precision for future ML
-  attemptSequence        Int // 1, 2, 3...
+  responseTimeMs         Int?
+  attemptSequence        Int
   estimatedMasteryBefore Float?
   estimatedMasteryAfter  Float?
 
@@ -711,7 +742,7 @@ model AssessmentAnswerAttempt {
 }
 
 // ======================================================
-// ENTERPRISE PHASE 4 COURSE CATALOG & INTEGRATION ENUMS
+// COURSE ENUMS
 // ======================================================
 
 enum ProviderStatus {
@@ -766,17 +797,17 @@ enum EnrollmentSource {
 }
 
 // ======================================================
-// 15. COURSE PROVIDER (iGOT, NSSTA, LOCAL DEV)
+// 15. COURSE PROVIDER
 // ======================================================
 
 model CourseProvider {
   id           Int            @id @default(autoincrement())
-  code         String         @unique // e.g. "IGOT", "NSSTA", "LOCAL_DEV"
-  name         String // e.g. "iGOT Karmayogi", "NSSTA Training Academy"
-  providerType String         @default("EXTERNAL_PLATFORM") // "OFFICIAL_GOVERNMENT", "ACADEMY", "LOCAL"
+  code         String         @unique
+  name         String
+  providerType String         @default("EXTERNAL_PLATFORM")
   baseUrl      String?
   status       ProviderStatus @default(ACTIVE)
-  capabilities Json? // e.g. { "catalogRead": true, "authenticatedCatalogSync": false, "enrollmentRead": false, "completionRead": false }
+  capabilities Json?
   lastSyncAt   DateTime?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -789,7 +820,7 @@ model CourseProvider {
 }
 
 // ======================================================
-// 16. COURSE (NORMALIZED TRAINING/LEARNING CATALOG)
+// 16. COURSE
 // ======================================================
 
 model Course {
@@ -798,10 +829,10 @@ model Course {
   providerId Int
   provider   CourseProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
-  externalId      String // External course ID from provider
+  externalId      String
   title           String
   description     String?
-  providerName    String // Display name e.g. "iGOT Karmayogi / MoSPI"
+  providerName    String
   durationMinutes Int     @default(60)
   language        String  @default("English")
 
@@ -810,8 +841,8 @@ model Course {
 
   courseUrl         String?
   thumbnailUrl      String?
-  learningOutcomes  Json? // Array of outcome bullet points
-  tags              Json? // Array of domain/topic tags
+  learningOutcomes  Json?
+  tags              Json?
   prerequisitesText String?
 
   isActive        Boolean   @default(true)
@@ -833,7 +864,7 @@ model Course {
 }
 
 // ======================================================
-// 17. COURSE COMPETENCY (AUTOMATIC & REVIEWABLE MAPPINGS)
+// 17. COURSE COMPETENCY
 // ======================================================
 
 model CourseCompetency {
@@ -845,10 +876,10 @@ model CourseCompetency {
   competencyId Int
   competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
 
-  relevanceScore     Float // Cosine similarity or relevance (0.0 - 1.0)
+  relevanceScore     Float
   mappingMethod      MappingMethod @default(SEMANTIC)
-  mappingReliability Float         @default(0.8) // Confidence metric (0.0 - 1.0)
-  evidence           String? // Why it matched (e.g. matched keywords / cosine details)
+  mappingReliability Float         @default(0.8)
+  evidence           String?
   status             MappingStatus @default(APPROVED)
 
   approvedByUserId Int?
@@ -866,7 +897,7 @@ model CourseCompetency {
 }
 
 // ======================================================
-// 18. COURSE PREREQUISITE (SEQUENCING RULES)
+// 18. COURSE PREREQUISITE
 // ======================================================
 
 model CoursePrerequisite {
@@ -881,7 +912,7 @@ model CoursePrerequisite {
   prerequisiteCompetencyId Int?
   prerequisiteCompetency   Competency? @relation(fields: [prerequisiteCompetencyId], references: [id], onDelete: SetNull)
 
-  minimumCompetencyScore Float? // e.g. Requires 50+ in TECH_PYTHON before this course
+  minimumCompetencyScore Float?
 
   createdAt DateTime @default(now())
 
@@ -891,7 +922,7 @@ model CoursePrerequisite {
 }
 
 // ======================================================
-// 19. COURSE SYNC RUN (TRACEABLE PROVIDER AUDIT LOG)
+// 19. COURSE SYNC RUN
 // ======================================================
 
 model CourseSyncRun {
@@ -915,7 +946,7 @@ model CourseSyncRun {
 }
 
 // ======================================================
-// 20. COURSE RECOMMENDATION (EXPLAINABLE EVENT TRACKING)
+// 20. COURSE RECOMMENDATION
 // ======================================================
 
 model CourseRecommendation {
@@ -930,13 +961,13 @@ model CourseRecommendation {
   competencyId Int
   competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
 
-  recommendationScore Float // Explainable composite score (0.0 - 1.0)
-  rankingPosition     Int // 1, 2, 3...
-  reasons             Json // Array of human-readable rationale strings
+  recommendationScore Float
+  rankingPosition     Int
+  reasons             Json
 
-  preCompetencyScore  Float? // Score when recommended
-  postCompetencyScore Float? // Score after completion
-  outcomeImprovement  Float? // Delta improvement (for future ML supervised ranking)
+  preCompetencyScore  Float?
+  postCompetencyScore Float?
+  outcomeImprovement  Float?
 
   recommendedAt DateTime  @default(now())
   acceptedAt    DateTime?
@@ -950,7 +981,7 @@ model CourseRecommendation {
 }
 
 // ======================================================
-// 21. TRAINING ENROLLMENT (LOCAL & SYNCED PROGRESS)
+// 21. TRAINING ENROLLMENT
 // ======================================================
 
 model TrainingEnrollment {
@@ -976,4 +1007,132 @@ model TrainingEnrollment {
   @@index([employeeProfileId])
   @@index([courseId])
   @@index([status])
+}
+
+// ======================================================
+// 22. TRAINING MATERIAL
+// Trainer uploaded learning / reference material
+// ======================================================
+
+model TrainingMaterial {
+  id Int @id @default(autoincrement())
+
+  title       String
+  description String?
+
+  originalFileName String
+  storedFileName   String
+  storagePath      String
+  mimeType         String
+  fileSizeBytes    Int
+  checksum         String?
+
+  status          MaterialProcessingStatus @default(UPLOADED)
+  processingError String?
+
+  pageCount     Int?
+  language      String  @default("English")
+  extractedText String?
+
+  competencyId Int?
+  competency   Competency? @relation(fields: [competencyId], references: [id], onDelete: SetNull)
+
+  uploadedByUserId Int
+  uploadedBy       User @relation("TrainingMaterialUploadedBy", fields: [uploadedByUserId], references: [id], onDelete: Restrict)
+
+  processedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chunks             MaterialChunk[]
+  generatedQuestions GeneratedQuestion[]
+  questionBankItems  AssessmentQuestionBankItem[]
+
+  @@index([uploadedByUserId])
+  @@index([competencyId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ======================================================
+// 23. MATERIAL CHUNK
+// Page-aware chunks used during AI generation / future RAG
+// ======================================================
+
+model MaterialChunk {
+  id Int @id @default(autoincrement())
+
+  materialId Int
+  material   TrainingMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  chunkIndex Int
+  pageNumber Int?
+
+  text       String
+  tokenCount Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  generatedQuestions GeneratedQuestion[]
+
+  @@unique([materialId, chunkIndex])
+  @@index([materialId])
+  @@index([pageNumber])
+}
+
+// ======================================================
+// 24. GENERATED QUESTION
+// AI generated draft - requires Trainer review
+// ======================================================
+
+model GeneratedQuestion {
+  id Int @id @default(autoincrement())
+
+  materialId Int
+  material   TrainingMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  sourceChunkId Int?
+  sourceChunk   MaterialChunk? @relation(fields: [sourceChunkId], references: [id], onDelete: SetNull)
+
+  competencyId Int
+  competency   Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  questionText String
+  questionType String @default("MCQ")
+
+  difficulty QuestionDifficulty @default(MEDIUM)
+
+  options       Json
+  correctOption String
+  explanation   String
+
+  sourcePage    Int?
+  sourceExcerpt String?
+
+  generatorProvider String?
+  generatorModel    String?
+  confidence        Float?
+
+  status GeneratedQuestionReviewStatus @default(PENDING)
+
+  reviewNotes String?
+
+  reviewedByUserId Int?
+  reviewedBy       User? @relation("GeneratedQuestionReviewedBy", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+
+  reviewedAt DateTime?
+
+  questionBankItemId Int?                        @unique
+  questionBankItem   AssessmentQuestionBankItem? @relation("GeneratedQuestionQuestionBankItem", fields: [questionBankItemId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([materialId])
+  @@index([sourceChunkId])
+  @@index([competencyId])
+  @@index([status])
+  @@index([reviewedByUserId])
 }

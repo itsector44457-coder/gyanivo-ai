@@ -29,7 +29,7 @@ export default function DashboardGatewayPage() {
           </div>
           <h2 className="text-xl font-bold text-slate-900">Redirecting to Portal...</h2>
           <p className="text-xs text-slate-500">
-            Taking you to the official Sketu AI employee and assessment workspace.
+            Taking you to the official Disha AI employee and assessment workspace.
           </p>
           <div className="pt-2">
             <Link

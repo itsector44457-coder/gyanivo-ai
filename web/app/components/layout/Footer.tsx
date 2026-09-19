@@ -63,7 +63,7 @@ const portalLinks = [
 ];
 
 const resourceLinks = [
-  { name: "About Sketu AI", href: "/about" },
+  { name: "About Disha AI", href: "/about" },
   { name: "SIH26101", href: "/about#sih26101" },
   { name: "User Guide", href: "/resources" },
   { name: "FAQs", href: "/faq" },
@@ -142,7 +142,7 @@ export default function Footer() {
 
             <div>
               <p className="text-2xl font-black tracking-tight">
-                Sketu{" "}
+                Disha{" "}
                 <span className="text-blue-400">
                   AI
                 </span>
@@ -191,10 +191,10 @@ export default function Footer() {
                 </p>
 
                 <a
-                  href="mailto:support@sketu.ai"
+                  href="mailto:support@disha.ai"
                   className="mt-0.5 block transition hover:text-white"
                 >
-                  support@sketu.ai
+                  support@disha.ai
                 </a>
               </div>
             </div>
@@ -273,7 +273,7 @@ export default function Footer() {
 
       <div className="mx-auto flex max-w-[1450px] flex-col justify-between gap-5 px-5 py-6 text-[11px] text-slate-500 sm:px-7 md:flex-row md:items-center lg:px-10">
         <p>
-          © {new Date().getFullYear()} Sketu AI. Built for Smart India
+          © {new Date().getFullYear()} Disha AI. Built for Smart India
           Hackathon.
         </p>
 

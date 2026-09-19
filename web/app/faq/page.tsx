@@ -8,19 +8,19 @@ import { ChevronDown, HelpCircle, ShieldCheck } from "lucide-react";
 export default function FAQPage() {
   const faqs = [
     {
-      q: "What is Sketu AI and which government cadre is it built for?",
-      a: "Sketu AI is an AI-powered competency intelligence, adaptive assessment, and personalized learning platform developed for India's Official Statistical System under MoSPI, catering specifically to Subordinate Statistical Service (SSS) and Indian Statistical Service (ISS) officers.",
+      q: "What is Disha AI and which government cadre is it built for?",
+      a: "Disha AI is an AI-powered competency intelligence, adaptive assessment, and personalized learning platform developed for India's Official Statistical System under MoSPI, catering specifically to Subordinate Statistical Service (SSS) and Indian Statistical Service (ISS) officers.",
     },
     {
       q: "How does the Computerized Adaptive Testing (CAT) work?",
       a: "CAT uses Item Response Theory (IRT) with a 3-Parameter Logistic (3PL) model. After each answered item, the engine recalibrates the officer's latent ability (θ) and dynamically selects the next item that maximizes Fisher Information, reducing testing time by over 50%.",
     },
     {
-      q: "How does Sketu AI guarantee zero hallucinations in generated questions?",
-      a: "All questions synthesized by Sketu AI are tied to exact page, paragraph, and chapter coordinates in uploaded official training manuals (e.g., NSS 78th Round guidelines, CPI calculation manuals). Every item includes a verifiable source citation badge.",
+      q: "How does Disha AI guarantee zero hallucinations in generated questions?",
+      a: "All questions synthesized by Disha AI are tied to exact page, paragraph, and chapter coordinates in uploaded official training manuals (e.g., NSS 78th Round guidelines, CPI calculation manuals). Every item includes a verifiable source citation badge.",
     },
     {
-      q: "How does Sketu AI integrate with iGOT Karmayogi?",
+      q: "How does Disha AI integrate with iGOT Karmayogi?",
       a: "Diagnosed competency gaps are automatically mapped against the iGOT Karmayogi civil service competency framework and NSSTA catalog to generate targeted micro-learning paths.",
     },
   ];
@@ -40,7 +40,7 @@ export default function FAQPage() {
             Questions & Answers
           </h1>
           <p className="text-xs sm:text-sm text-slate-600">
-            Everything you need to know about the Sketu AI assessment and learning framework.
+            Everything you need to know about the Disha AI assessment and learning framework.
           </p>
         </div>
 

@@ -29,7 +29,7 @@ export default function AboutPage() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-950 mb-4">
             About{" "}
             <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-              Sketu AI
+              Disha AI
             </span>
           </h1>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
@@ -47,7 +47,7 @@ export default function AboutPage() {
               Ministry of Statistics & Programme Implementation (MoSPI)
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              MoSPI oversees the Subordinate Statistical Service (SSS) and Indian Statistical Service (ISS), conducting high-stakes nationwide surveys including the National Sample Survey (NSS), Consumer Price Index (CPI), and Annual Survey of Industries (ASI). Sketu AI ensures officers master survey guidelines with verifiable precision.
+              MoSPI oversees the Subordinate Statistical Service (SSS) and Indian Statistical Service (ISS), conducting high-stakes nationwide surveys including the National Sample Survey (NSS), Consumer Price Index (CPI), and Annual Survey of Industries (ASI). Disha AI ensures officers master survey guidelines with verifiable precision.
             </p>
           </div>
 
@@ -59,7 +59,7 @@ export default function AboutPage() {
               Zero-Hallucination AI Architecture
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Unlike generic LLMs, Sketu AI binds every question, explanation, and recommendation to cryptographically verifiable source citations directly from official gazetted manuals, guidelines, and curriculum documents.
+              Unlike generic LLMs, Disha AI binds every question, explanation, and recommendation to cryptographically verifiable source citations directly from official gazetted manuals, guidelines, and curriculum documents.
             </p>
           </div>
         </div>

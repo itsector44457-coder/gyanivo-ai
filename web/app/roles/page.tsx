@@ -93,7 +93,7 @@ export default function RolesPage() {
             </span>
           </h1>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Sketu AI provides specialized user journeys tailored to the distinct responsibilities of Officers, NSSTA Trainers, and MoSPI Leadership.
+            Disha AI provides specialized user journeys tailored to the distinct responsibilities of Officers, NSSTA Trainers, and MoSPI Leadership.
           </p>
         </div>
 

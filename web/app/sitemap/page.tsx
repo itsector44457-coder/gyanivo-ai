@@ -16,7 +16,7 @@ export default function SitemapPage() {
         { name: "Roles", href: "/roles" },
         { name: "Assessments", href: "/assessments" },
         { name: "Analytics", href: "/analytics" },
-        { name: "About Sketu AI", href: "/about" },
+        { name: "About Disha AI", href: "/about" },
       ],
     },
     {

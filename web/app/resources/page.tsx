@@ -9,7 +9,7 @@ import { FileText, Download, BookOpen, ArrowRight, ShieldCheck } from "lucide-re
 export default function ResourcesPage() {
   const docs = [
     {
-      title: "Sketu AI User Manual & Architecture Document",
+      title: "Disha AI User Manual & Architecture Document",
       desc: "Complete operational handbook covering officer diagnostic workflow, IRT psychometrics, and trainer authoring.",
       type: "PDF Guide",
       size: "4.2 MB",
