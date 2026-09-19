@@ -134,7 +134,7 @@ export default function Footer() {
         {/* BRAND */}
         <div>
           <Link href="/" className="inline-flex items-center gap-3">
-            <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl">
+            <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
               <img
                 src="/Disha_AI_Logo.png"
                 alt="Disha AI Logo"

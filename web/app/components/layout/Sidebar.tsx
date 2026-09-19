@@ -144,7 +144,7 @@ export function Sidebar({
       <div className="flex h-16 items-center justify-between px-3.5 border-b border-blue-900/60 bg-blue-950/40">
         {!isCollapsed && (
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center">
               <img src="/Disha_AI_Logo.png" alt="Disha AI Logo" className="h-full w-full object-contain" />
             </div>
             <div className="min-w-0">
@@ -162,7 +162,7 @@ export function Sidebar({
         )}
 
         {isCollapsed && (
-          <div className="mx-auto flex h-8 w-8 items-center justify-center overflow-hidden">
+          <div className="mx-auto flex h-10 w-10 items-center justify-center">
             <img src="/Disha_AI_Logo.png" alt="Disha AI Logo" className="h-full w-full object-contain" />
           </div>
         )}

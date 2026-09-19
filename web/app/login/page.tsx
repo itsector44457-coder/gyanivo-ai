@@ -379,7 +379,7 @@ export default function LoginPage() {
             href="/"
             className="flex items-center gap-3"
           >
-            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl">
+            <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center">
               <img
                 src="/Disha_AI_Logo.png"
                 alt="Disha AI Logo"

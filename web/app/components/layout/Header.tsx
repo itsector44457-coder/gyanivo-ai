@@ -75,7 +75,7 @@ export default function Header() {
             href="/"
             className="group flex shrink-0 items-center gap-3"
           >
-            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl transition duration-300 group-hover:scale-105">
+            <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center transition duration-300 group-hover:scale-105">
               <img
                 src="/Disha_AI_Logo.png"
                 alt="Disha AI Logo"
