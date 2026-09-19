@@ -87,7 +87,7 @@ export default function QRPage() {
           </div>
 
           <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white border border-slate-200 p-0.5 shadow-md overflow-hidden">
+            <div className="flex h-9 w-9 items-center justify-center overflow-hidden">
               <img src="/Disha_AI_Logo.png" alt="Disha AI Logo" className="h-full w-full object-contain" />
             </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900">
