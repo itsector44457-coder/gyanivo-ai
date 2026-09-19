@@ -149,7 +149,9 @@ export interface CourseMappingAdminRow {
 
 function getAuthHeaders(): HeadersInit {
   if (typeof window === 'undefined') return {};
-  const token = localStorage.getItem('accessToken');
+  const token =
+    localStorage.getItem('gyanivo_access_token') ||
+    localStorage.getItem('accessToken');
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
