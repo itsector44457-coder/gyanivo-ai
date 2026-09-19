@@ -379,12 +379,12 @@ export default function LoginPage() {
             href="/"
             className="flex items-center gap-3"
           >
-            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 shadow-lg shadow-blue-500/20">
-
-              <BrainCircuit className="h-6 w-6 text-white" />
-
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30" />
-
+            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-md shadow-blue-500/10 p-0.5">
+              <img
+                src="/Disha_AI_Logo.svg"
+                alt="Disha AI Logo"
+                className="h-full w-full object-contain"
+              />
             </div>
 
             <div>

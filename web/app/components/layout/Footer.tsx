@@ -134,10 +134,12 @@ export default function Footer() {
         {/* BRAND */}
         <div>
           <Link href="/" className="inline-flex items-center gap-3">
-            <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 shadow-lg shadow-blue-500/20">
-              <BrainCircuit className="h-6 w-6 text-white" />
-
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30" />
+            <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white border border-slate-700/50 shadow-lg shadow-blue-500/20 p-1">
+              <img
+                src="/Disha_AI_Logo.svg"
+                alt="Disha AI Logo"
+                className="h-full w-full object-contain"
+              />
             </div>
 
             <div>

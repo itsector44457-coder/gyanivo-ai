@@ -75,10 +75,12 @@ export default function Header() {
             href="/"
             className="group flex shrink-0 items-center gap-3"
           >
-            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 shadow-lg shadow-blue-500/20 transition duration-300 group-hover:scale-105">
-              <BrainCircuit className="h-6 w-6 text-white" />
-
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30" />
+            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-md shadow-blue-500/10 transition duration-300 group-hover:scale-105 group-hover:shadow-blue-500/20">
+              <img
+                src="/Disha_AI_Logo.svg"
+                alt="Disha AI Logo"
+                className="h-full w-full object-contain p-0.5"
+              />
             </div>
 
             <div className="leading-none">
