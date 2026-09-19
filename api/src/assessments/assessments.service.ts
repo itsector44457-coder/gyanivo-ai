@@ -439,7 +439,7 @@ export class AssessmentsService {
       });
 
       // Prepare completion summary
-      const roleReq = attempt.competency.roleRequirements[0];
+      const roleReq = attempt.competency?.roleRequirements?.[0];
       const requiredScore = roleReq ? roleReq.requiredScore : 70;
       const prevGap = previousScore !== null ? Math.max(0, requiredScore - previousScore) : requiredScore;
       const newGap = Math.max(0, requiredScore - finalScore);
@@ -447,9 +447,9 @@ export class AssessmentsService {
       finalSummary = {
         attemptId: attempt.id,
         competencyId: attempt.competencyId,
-        competencyName: attempt.competency.name,
-        competencyCode: attempt.competency.code,
-        domainName: attempt.competency.domain.name,
+        competencyName: attempt.competency?.name || 'Competency Assessment',
+        competencyCode: attempt.competency?.code || 'STAT_EVAL',
+        domainName: attempt.competency?.domain?.name || 'Statistical Methods & Official Frameworks',
         requiredScore,
         previousScore,
         newScore: finalScore,
@@ -591,7 +591,7 @@ export class AssessmentsService {
       },
     });
 
-    const roleReq = attempt.competency.roleRequirements[0];
+    const roleReq = attempt.competency?.roleRequirements?.[0];
     const requiredScore = roleReq ? roleReq.requiredScore : 70;
     const finalScore = attempt.finalCompetencyScore || (empComp ? empComp.currentScore : 50);
     const prevScore = attempt.initialCompetencyScore;
@@ -617,9 +617,9 @@ export class AssessmentsService {
       data: {
         attemptId: attempt.id,
         competencyId: attempt.competencyId,
-        competencyName: attempt.competency.name,
-        competencyCode: attempt.competency.code,
-        domainName: attempt.competency.domain.name,
+        competencyName: attempt.competency?.name || 'Competency Assessment',
+        competencyCode: attempt.competency?.code || 'STAT_EVAL',
+        domainName: attempt.competency?.domain?.name || 'Statistical Methods & Official Frameworks',
         requiredScore,
         previousScore: prevScore,
         newScore: finalScore,
