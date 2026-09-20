@@ -22,11 +22,15 @@ import { Badge } from "@/components/ui/Badge";
 import { HorizontalCompetencyBar } from "@/components/ui/HorizontalCompetencyBar";
 import { Modal } from "@/components/ui/Modal";
 import { getMyCompetencies, EvaluatedCompetency, EmployeeCompetenciesResponse } from "@/lib/api/competencies";
+import { useAuth } from "@/lib/auth/AuthContext";
+import { generateCompetencyPDF } from "@/lib/pdf/generateCompetencyReport";
 
 export default function EmployeeCompetenciesPage() {
+  const { user } = useAuth();
   const [data, setData] = useState<EmployeeCompetenciesResponse['data'] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState<"competencies" | "overview" | "history" | "requirements">("competencies");
   const [selectedDomain, setSelectedDomain] = useState<string>("All");
   const [selectedEvidenceComp, setSelectedEvidenceComp] = useState<EvaluatedCompetency | null>(null);
@@ -58,8 +62,17 @@ export default function EmployeeCompetenciesPage() {
     );
   });
 
-  const handleDownloadReport = () => {
-    alert("Official MoSPI Competency Profile Report (PDF generation - Prototype Action). A verified cadre transcript is generated.");
+  const handleDownloadReport = async () => {
+    if (!data) return;
+    setGenerating(true);
+    try {
+      await generateCompetencyPDF(data, user);
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+      alert('PDF generation failed. Please try again.');
+    } finally {
+      setGenerating(false);
+    }
   };
 
   if (loading) {
@@ -93,10 +106,15 @@ export default function EmployeeCompetenciesPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleDownloadReport}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-2xs"
+            disabled={!data || generating}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Download className="h-4 w-4 text-blue-700" />
-            Download Cadre Report
+            {generating ? (
+              <Loader2 className="h-4 w-4 text-blue-700 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4 text-blue-700" />
+            )}
+            {generating ? 'Generating PDF…' : 'Download Cadre Report'}
           </button>
         </div>
       </div>
