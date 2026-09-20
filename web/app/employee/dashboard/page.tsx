@@ -319,7 +319,7 @@ export default function EmployeeDashboardPage() {
                   <SampleCatalogueBadge />
                 </div>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Targeted NSSTA & iGOT modules mapped to your priority skill gaps (Phase 4 integration)
+                  Targeted NSSTA & iGOT modules mapped to your priority skill gaps (AI Explainable Matching)
                 </p>
               </div>
               <Link

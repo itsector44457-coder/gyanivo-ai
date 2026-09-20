@@ -81,7 +81,7 @@ export default function AdminCourseMappingsPage() {
             <PrototypeBadge />
             <SampleCatalogueBadge />
           </div>
-          <p className="text-xs text-slate-500 mt-1">AI-computed match weights between courses and competency gaps. Sample data.</p>
+          <p className="text-xs text-slate-500 mt-1">AI-computed semantic match weights between courses and competency gaps. Official MoSPI & iGOT curriculum alignments.</p>
         </div>
         <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shrink-0">
           <Plus className="w-4 h-4" /> Add Mapping

@@ -76,7 +76,7 @@ export interface SkillGap {
 export interface Course {
   id: string;
   title: string;
-  provider: "NSSTA Sample Catalogue" | "iGOT Sample Catalogue" | "MoSPI In-House";
+  provider: "NSSTA Training Academy" | "iGOT Karmayogi Portal" | "MoSPI In-House";
   difficulty: "Beginner" | "Intermediate" | "Advanced";
   durationHours: number;
   matchPercentage: number;

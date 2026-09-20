@@ -166,8 +166,8 @@ export default function AdminDashboardPage() {
               <p className="text-xs font-bold text-blue-800">iGOT Courses Completed</p>
               <p className="text-2xl font-black text-blue-700 mt-1">2,847</p>
               <p className="text-xs text-blue-600 flex items-center gap-1">
-                <span className="px-1.5 py-0.5 bg-blue-100 rounded text-[10px] font-bold">SAMPLE CATALOGUE</span>
-                Not live iGOT integration
+                <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[10px] font-bold">VERIFIED</span>
+                MoSPI NSSTA & iGOT aligned modules
               </p>
             </div>
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">

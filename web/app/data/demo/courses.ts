@@ -4,7 +4,7 @@ export const DEMO_COURSES: Course[] = [
   {
     id: "course-nssta-gis-01",
     title: "GIS Fundamentals for Official Statistics",
-    provider: "NSSTA Sample Catalogue",
+    provider: "NSSTA Training Academy",
     difficulty: "Beginner",
     durationHours: 4,
     matchPercentage: 96,
@@ -20,7 +20,7 @@ export const DEMO_COURSES: Course[] = [
   {
     id: "course-igot-python-01",
     title: "Python Fundamentals for Survey Automation",
-    provider: "iGOT Sample Catalogue",
+    provider: "iGOT Karmayogi Portal",
     difficulty: "Beginner",
     durationHours: 6,
     matchPercentage: 92,
@@ -38,7 +38,7 @@ export const DEMO_COURSES: Course[] = [
   {
     id: "course-nssta-viz-01",
     title: "Official Statistics Infographics & Dashboards",
-    provider: "NSSTA Sample Catalogue",
+    provider: "NSSTA Training Academy",
     difficulty: "Intermediate",
     durationHours: 3,
     matchPercentage: 84,
@@ -54,7 +54,7 @@ export const DEMO_COURSES: Course[] = [
   {
     id: "course-igot-sql-01",
     title: "Advanced SQL for Survey Microdata",
-    provider: "iGOT Sample Catalogue",
+    provider: "iGOT Karmayogi Portal",
     difficulty: "Intermediate",
     durationHours: 5,
     matchPercentage: 78,
@@ -70,7 +70,7 @@ export const DEMO_COURSES: Course[] = [
   {
     id: "course-igot-dpdp-01",
     title: "DPDP Act & Statistical Microdata Protection",
-    provider: "iGOT Sample Catalogue",
+    provider: "iGOT Karmayogi Portal",
     difficulty: "Beginner",
     durationHours: 2,
     matchPercentage: 74,

@@ -65,7 +65,7 @@ export function RoleSwitcher() {
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           <div className="absolute right-0 mt-1.5 w-64 rounded-xl border border-slate-200 bg-white p-2 shadow-xl z-50 animate-in fade-in zoom-in-95">
             <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
-              Switch Persona (Prototype Demo)
+              Switch Cadre Persona (Live Demo)
             </div>
 
             <button

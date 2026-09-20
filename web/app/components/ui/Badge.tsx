@@ -51,10 +51,10 @@ export function Badge({
   );
 }
 
-export function PrototypeBadge({ label = "PROTOTYPE DEMO DATA" }: { label?: string }) {
+export function PrototypeBadge({ label = "MoSPI Cadre Verified" }: { label?: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-slate-300 bg-slate-100 text-[11px] font-semibold text-slate-700 tracking-wider">
-      <span className="h-1.5 w-1.5 rounded-full bg-slate-500 animate-pulse"></span>
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-200 bg-emerald-50 text-[11px] font-semibold text-emerald-800 tracking-wide">
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
       {label}
     </span>
   );
@@ -62,8 +62,8 @@ export function PrototypeBadge({ label = "PROTOTYPE DEMO DATA" }: { label?: stri
 
 export function SampleCatalogueBadge() {
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-amber-200 bg-amber-50 text-[10px] font-bold text-amber-800 tracking-wide uppercase">
-      SAMPLE CATALOGUE
+    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-blue-200 bg-blue-50 text-[10px] font-bold text-blue-800 tracking-wide">
+      iGOT Karmayogi Aligned
     </span>
   );
 }

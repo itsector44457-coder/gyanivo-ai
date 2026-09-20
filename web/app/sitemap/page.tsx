@@ -25,9 +25,9 @@ export default function SitemapPage() {
         { name: "Officer Portal", href: "/employee/dashboard" },
         { name: "Trainer Workspace", href: "/trainer/dashboard" },
         { name: "Admin Governance", href: "/admin/dashboard" },
-        { name: "Psychometrics Lab", href: "/ai-engine" },
+        { name: "Adaptive Assessment Engine", href: "/employee/assessments" },
         { name: "AI Copilot", href: "/copilot" },
-        { name: "500p PDF Ingestion", href: "/trainer/materials/upload" },
+        { name: "Syllabus Upload & Ingestion", href: "/trainer/materials/upload" },
       ],
     },
   ];

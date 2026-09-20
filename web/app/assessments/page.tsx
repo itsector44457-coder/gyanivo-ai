@@ -113,43 +113,65 @@ export default function AssessmentsPage() {
           ))}
         </div>
 
-        {/* CAT Psychometrics Spotlight */}
+        {/* Official Diagnostic Assessment Workflow Spotlight */}
         <div className="rounded-3xl bg-slate-900 text-white p-8 sm:p-12 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="space-y-4 max-w-xl">
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-800">
-              Interactive Psychometric Lab
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-400 bg-blue-950/80 px-3 py-1 rounded-full border border-blue-800">
+              Official Diagnostic Engine
             </span>
             <h2 className="text-2xl sm:text-3xl font-black">
-              Explore the CAT / IRT Simulation Engine
+              Take Real-Time Competency Assessment
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Test how candidate ability (θ), item difficulty (b), discrimination (a), and pseudo-guessing (c) converge in real time with live probability curves and standard error bounds.
+              Assess your proficiency across core MoSPI domains including National Accounts Statistics, Consumer Price Index (CPI/IIP), Survey Sampling, and Data Analytics. The system dynamically measures knowledge mastery and generates your personalized learning roadmap.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Link
-                href="/ai-engine"
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-lg hover:from-blue-700 hover:to-indigo-700 transition"
+                href="/employee/assessments"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-lg hover:from-blue-700 hover:to-indigo-700 transition"
               >
-                <Cpu className="h-4 w-4" />
-                <span>Launch Psychometrics Lab</span>
+                <FileCheck2 className="h-4 w-4" />
+                <span>Start Official Assessment</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/practice"
+                href="/login"
                 className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-5 py-3 text-xs sm:text-sm font-bold text-slate-200 hover:bg-slate-700 transition"
               >
-                <span>Take Practice Test</span>
+                <span>Cadre Login</span>
               </Link>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 w-full lg:max-w-md text-xs font-mono space-y-2">
-            <div className="text-slate-400">// IRT 3-Parameter Logistic (3PL) Formula</div>
-            <div className="text-blue-400 font-bold">P(θ) = c + (1 - c) / [1 + exp(-1.7 * a * (θ - b))]</div>
-            <div className="pt-2 text-slate-400">// Fisher Information Function</div>
-            <div className="text-emerald-400">I(θ) = [P&apos;(θ)]² / [P(θ) * (1 - P(θ))]</div>
-            <div className="pt-2 text-slate-400">// Standard Error of Estimation</div>
-            <div className="text-violet-400">SE(θ) = 1 / √[Σ I_i(θ)]</div>
+          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 w-full lg:max-w-md text-xs space-y-3">
+            <div className="flex items-center gap-2 font-bold text-blue-400 pb-1 border-b border-slate-800">
+              <ShieldCheck className="h-4 w-4 text-blue-400" />
+              <span>Assessment Architecture Highlights</span>
+            </div>
+            <div className="flex items-start gap-2.5 text-slate-300">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-white">Precision Diagnostics:</strong> Bayesian Knowledge Tracing eliminates guessing bias to calculate true skill mastery.
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5 text-slate-300">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-white">50% Time Saved:</strong> Adaptive item difficulty reaches measurement confidence in 15-20 questions.
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5 text-slate-300">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-white">Instant Gap Analysis:</strong> Generates target vs actual proficiency matrix immediately upon completion.
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5 text-slate-300">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-white">Automated Pathing:</strong> Links directly to iGOT Karmayogi courses to bridge detected skill deficits.
+              </div>
+            </div>
           </div>
         </div>
       </main>

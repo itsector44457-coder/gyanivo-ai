@@ -58,46 +58,44 @@ export function Sidebar({
   const role = getCurrentRole();
 
   const employeeLinks = [
-    { href: "/employee/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/employee/dashboard", label: "My Dashboard", icon: LayoutDashboard },
     { href: "/copilot", label: "Disha AI Copilot", icon: Bot, badge: "AI" },
-    { href: "/employee/competencies", label: "Competency Index", icon: Award },
+    { href: "/employee/competencies", label: "My Competencies", icon: Award },
     { href: "/employee/skill-gaps", label: "Skill Gap Analysis", icon: AlertTriangle, badge: "Gaps" },
-    { href: "/employee/learning-path", label: "Adaptive Path", icon: Compass },
-    { href: "/employee/courses", label: "Recommended Training", icon: BookOpen },
-    { href: "/employee/assessments", label: "Evaluations", icon: FileCheck2 },
-    { href: "/employee/progress", label: "Performance & Growth", icon: TrendingUp },
-    { href: "/employee/learning-history", label: "Training History", icon: History },
+    { href: "/employee/learning-path", label: "My Learning Path", icon: Compass },
+    { href: "/employee/courses", label: "Recommended Courses", icon: BookOpen },
+    { href: "/employee/assessments", label: "Diagnostic Tests", icon: FileCheck2 },
+    { href: "/employee/progress", label: "Skill Growth & Scores", icon: TrendingUp },
+    { href: "/employee/learning-history", label: "Completed Training", icon: History },
   ];
 
   const trainerLinks = [
-    { href: "/trainer/dashboard", label: "Trainer Hub", icon: LayoutDashboard },
-    { href: "/copilot", label: "Cadre AI Copilot", icon: Bot, badge: "RAG" },
+    { href: "/trainer/dashboard", label: "Trainer Dashboard", icon: LayoutDashboard },
+    { href: "/copilot", label: "Trainer AI Copilot", icon: Bot, badge: "AI" },
     { href: "/trainer/materials", label: "Training Materials", icon: Upload },
-    { href: "/trainer/materials/upload", label: "500p Ingestion Pipeline", icon: Cpu, badge: "AI" },
-    { href: "/trainer/question-review", label: "Question Verification", icon: FileSpreadsheet, badge: "Review" },
-    { href: "/trainer/question-bank", label: "Question Repository", icon: Layers },
-    { href: "/ai-engine", label: "Psychometrics Lab", icon: Cpu, badge: "CAT" },
-    { href: "/trainer/assessments", label: "Assessment Schemes", icon: FileCheck2 },
-    { href: "/trainer/assessment-builder", label: "Assessment Assembler", icon: Sliders },
-    { href: "/trainer/analytics", label: "Cadre Performance", icon: BarChart3 },
+    { href: "/trainer/materials/upload", label: "Upload Syllabus (PDF)", icon: Cpu, badge: "AI" },
+    { href: "/trainer/question-review", label: "Review Questions", icon: FileSpreadsheet, badge: "Review" },
+    { href: "/trainer/question-bank", label: "Question Bank", icon: Layers },
+    { href: "/trainer/assessments", label: "Assessments", icon: FileCheck2 },
+    { href: "/trainer/assessment-builder", label: "Create Assessment", icon: Sliders },
+    { href: "/trainer/analytics", label: "Officer Performance", icon: BarChart3 },
   ];
 
   const adminLinks = [
-    { href: "/admin/dashboard", label: "Command Centre", icon: LayoutDashboard },
-    { href: "/copilot", label: "Cadre AI Copilot", icon: Bot, badge: "AI" },
-    { href: "/ai-engine", label: "AI Psychometrics", icon: Cpu, badge: "Lab" },
-    { href: "/admin/employees", label: "Cadre Directory", icon: Users },
-    { href: "/admin/departments", label: "Divisions & Units", icon: Building2 },
-    { href: "/admin/job-roles", label: "Cadre Roles", icon: Briefcase },
+    { href: "/admin/dashboard", label: "Admin Dashboard", icon: LayoutDashboard },
+    { href: "/copilot", label: "MoSPI AI Copilot", icon: Bot, badge: "AI" },
+    { href: "/admin/employees", label: "Officers Directory", icon: Users },
+    { href: "/admin/departments", label: "Departments & Divisions", icon: Building2 },
+    { href: "/admin/job-roles", label: "Cadre Job Roles", icon: Briefcase },
     { href: "/admin/role-matrix", label: "Role-Competency Matrix", icon: GitFork, badge: "Matrix" },
-    { href: "/admin/competencies", label: "Framework Catalog", icon: Award },
-    { href: "/admin/skill-gaps", label: "Organisation Skill Gaps", icon: AlertTriangle },
-    { href: "/admin/courses", label: "Course Management", icon: BookOpen },
+    { href: "/admin/competencies", label: "Competency Framework", icon: Award },
+    { href: "/admin/skill-gaps", label: "MoSPI Skill Gaps", icon: AlertTriangle },
+    { href: "/admin/courses", label: "Course Catalog", icon: BookOpen },
     { href: "/admin/course-mappings", label: "Course Mappings", icon: Sliders },
-    { href: "/admin/assessments", label: "Compliance Monitor", icon: FileCheck2 },
+    { href: "/admin/assessments", label: "Assessment Compliance", icon: FileCheck2 },
     { href: "/admin/analytics", label: "Ministry Analytics", icon: BarChart3 },
     { href: "/admin/audit-logs", label: "System Audit Logs", icon: ShieldCheck },
-    { href: "/admin/settings", label: "Configuration", icon: Settings },
+    { href: "/admin/settings", label: "System Settings", icon: Settings },
   ];
 
   const links =
@@ -109,10 +107,10 @@ export function Sidebar({
 
   const roleName =
     role === "EMPLOYEE"
-      ? "Employee Portal"
+      ? "Officer Portal"
       : role === "TRAINER"
       ? "Trainer Workspace"
-      : "Admin Command";
+      : "MoSPI Admin Command";
 
   const displayName = user
     ? `${user.firstName} ${user.lastName}`

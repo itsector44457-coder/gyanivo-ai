@@ -69,15 +69,15 @@ export default function AboutPage() {
           <h2 className="text-2xl font-black mb-6">Core Technological Innovations</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <div className="text-blue-400 font-bold text-sm">01. 500p Document Ingestion</div>
+              <div className="text-blue-400 font-bold text-sm">01. Comprehensive Manual Ingestion</div>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Parallel worker chunking that digests entire survey guidelines and synthesizes evaluation questions in seconds.
+                Automated document parsing that digests entire MoSPI survey guidelines, circulars, and synthesizes evaluation questions with citations.
               </p>
             </div>
             <div className="space-y-2">
-              <div className="text-emerald-400 font-bold text-sm">02. CAT / IRT Psychometrics</div>
+              <div className="text-emerald-400 font-bold text-sm">02. Adaptive Skill Diagnostics</div>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Computerized Adaptive Testing powered by 3-Parameter Logistic Item Response Theory for standard error convergence.
+                Computerized Adaptive Testing powered by Bayesian Knowledge Tracing to eliminate guessing bias and measure true competency.
               </p>
             </div>
             <div className="space-y-2">

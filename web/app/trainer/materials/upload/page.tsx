@@ -364,7 +364,7 @@ export default function TrainerUploadMaterialPage() {
                   >
                     <option value={30}>30 Questions</option>
                     <option value={45}>45 Questions</option>
-                    <option value={50}>50 Questions (Recommended for 500p)</option>
+                    <option value={50}>50 Questions (Recommended for Full Manuals)</option>
                     <option value={60}>60 Questions</option>
                     <option value={80}>80 Questions</option>
                   </select>
