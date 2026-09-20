@@ -21,11 +21,11 @@ export const metadata: Metadata = {
   authors: [{ name: "Disha AI Team" }],
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/Disha_AI_Logo.png", type: "image/png" },
+      { url: "/Disha_AI_Logo.png?v=2", type: "image/png" },
+      { url: "/favicon.ico?v=2", sizes: "any" },
     ],
-    shortcut: "/favicon.ico",
-    apple: "/Disha_AI_Logo.png",
+    shortcut: "/Disha_AI_Logo.png?v=2",
+    apple: "/Disha_AI_Logo.png?v=2",
   },
   manifest: "/manifest.json",
   openGraph: {
