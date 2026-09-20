@@ -32,6 +32,7 @@ export default function AssessmentPlayerPage() {
   const rawId = params?.id as string;
   const attemptId = parseInt(rawId, 10);
 
+  const [realAttemptId, setRealAttemptId] = useState<number>(attemptId);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +67,7 @@ export default function AssessmentPlayerPage() {
             // Request question via startDiagnostic
             const startRes = await startDiagnosticAssessment(active.competencyId);
             if (startRes.success && startRes.data) {
+              if (startRes.data.attemptId) setRealAttemptId(startRes.data.attemptId);
               setCompetencyName(startRes.data.competencyName);
               setCompetencyCode(startRes.data.competencyCode);
               setCurrentQuestion(startRes.data.question);
@@ -76,6 +78,7 @@ export default function AssessmentPlayerPage() {
             if (avail) {
               const startRes = await startDiagnosticAssessment(avail.competencyId);
               if (startRes.success && startRes.data) {
+                if (startRes.data.attemptId) setRealAttemptId(startRes.data.attemptId);
                 setCompetencyName(startRes.data.competencyName);
                 setCompetencyCode(startRes.data.competencyCode);
                 setCurrentQuestion(startRes.data.question);
@@ -84,6 +87,7 @@ export default function AssessmentPlayerPage() {
               // Direct start fallback
               const startRes = await startDiagnosticAssessment(attemptId);
               if (startRes.success && startRes.data) {
+                if (startRes.data.attemptId) setRealAttemptId(startRes.data.attemptId);
                 setCompetencyName(startRes.data.competencyName);
                 setCompetencyCode(startRes.data.competencyCode);
                 setCurrentQuestion(startRes.data.question);
@@ -123,9 +127,10 @@ export default function AssessmentPlayerPage() {
       setSubmitting(true);
       setError(null);
       const responseTimeMs = Date.now() - questionStartTimeRef.current;
+      const targetAttemptId = realAttemptId || attemptId;
 
       const res = await submitAssessmentAnswer(
-        attemptId,
+        targetAttemptId,
         currentQuestion.id,
         selectedOption,
         responseTimeMs,
@@ -144,8 +149,9 @@ export default function AssessmentPlayerPage() {
   const handleNextQuestion = () => {
     if (!submissionFeedback) return;
 
+    const targetAttemptId = realAttemptId || attemptId;
     if (submissionFeedback.isCompleted) {
-      router.push(`/employee/results/${attemptId}`);
+      router.push(`/employee/results/${targetAttemptId}`);
       return;
     }
 

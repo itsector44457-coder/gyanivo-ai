@@ -2,6 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
+  Logger,
   Param,
   ParseIntPipe,
   Post,
@@ -17,6 +20,8 @@ import { SubmitAnswerDto } from './dto/submit-answer.dto';
 @Controller('assessments')
 @UseGuards(JwtAuthGuard)
 export class AssessmentsController {
+  private readonly logger = new Logger(AssessmentsController.name);
+
   constructor(private readonly assessmentsService: AssessmentsService) {}
 
   @Get('my')
@@ -29,7 +34,18 @@ export class AssessmentsController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: StartDiagnosticDto,
   ) {
-    return this.assessmentsService.startDiagnostic(user.id, dto);
+    try {
+      return await this.assessmentsService.startDiagnostic(user.id, dto);
+    } catch (err: any) {
+      this.logger.error(`Failed to start diagnostic for user ${user.id}: ${err.message}`, err.stack);
+      if (err instanceof HttpException) {
+        throw err;
+      }
+      throw new HttpException(
+        err.message || 'Internal error starting diagnostic assessment',
+        err.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Post('attempts/:attemptId/answer')
@@ -38,7 +54,18 @@ export class AssessmentsController {
     @Param('attemptId', ParseIntPipe) attemptId: number,
     @Body() dto: SubmitAnswerDto,
   ) {
-    return this.assessmentsService.submitAnswer(user.id, attemptId, dto);
+    try {
+      return await this.assessmentsService.submitAnswer(user.id, attemptId, dto);
+    } catch (err: any) {
+      this.logger.error(`Failed to submit answer for attempt ${attemptId}: ${err.message}`, err.stack);
+      if (err instanceof HttpException) {
+        throw err;
+      }
+      throw new HttpException(
+        err.message || 'Internal error submitting answer',
+        err.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get('attempts/:attemptId/results')
