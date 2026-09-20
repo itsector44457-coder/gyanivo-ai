@@ -21,7 +21,7 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
-import { DEMO_COURSES, DEMO_ASSESSMENTS } from "@/data/demo";
+import { getMyRecommendations, type CourseRecommendation } from "@/lib/api/courses";
 import { HorizontalCompetencyBar } from "@/components/ui/HorizontalCompetencyBar";
 import { Badge, PrototypeBadge, SampleCatalogueBadge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
@@ -34,26 +34,22 @@ export default function EmployeeDashboardPage() {
   const [stats, setStats] = useState<EmployeeDashboardResponse['data'] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recommendations, setRecommendations] = useState<CourseRecommendation[]>([]);
 
   // Explainability Modals
   const [selectedGapExplanation, setSelectedGapExplanation] = useState<EvaluatedCompetency | null>(null);
-  const [selectedCourseExplanation, setSelectedCourseExplanation] = useState<{
-    title: string;
-    provider: string;
-    match: number;
-    reason: string;
-    target: string[];
-    id: string;
-  } | null>(null);
+  const [selectedCourseExplanation, setSelectedCourseExplanation] = useState<CourseRecommendation | null>(null);
 
   useEffect(() => {
     async function loadDashboard() {
       try {
         setLoading(true);
-        const res = await getMyDashboardStats();
-        if (res.success && res.data) {
-          setStats(res.data);
-        }
+        const [dashRes, recRes] = await Promise.all([
+          getMyDashboardStats(),
+          getMyRecommendations({ limit: 4 }).catch(() => []),
+        ]);
+        if (dashRes.success && dashRes.data) setStats(dashRes.data);
+        setRecommendations(recRes);
       } catch (err: any) {
         setError(err.message || "Failed to load dashboard metrics");
       } finally {
@@ -63,17 +59,8 @@ export default function EmployeeDashboardPage() {
     loadDashboard();
   }, []);
 
-  const openWhyRecommended = (courseId: string) => {
-    const course = DEMO_COURSES.find((c) => c.id === courseId);
-    if (!course) return;
-    setSelectedCourseExplanation({
-      title: course.title,
-      provider: course.provider,
-      match: course.matchPercentage,
-      reason: course.recommendationReason,
-      target: course.targetCompetencies,
-      id: course.id,
-    });
+  const openWhyRecommended = (rec: CourseRecommendation) => {
+    setSelectedCourseExplanation(rec);
   };
 
   const displayName = user ? user.firstName : "Rahul";
@@ -331,43 +318,53 @@ export default function EmployeeDashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {DEMO_COURSES.slice(0, 2).map((course) => (
-                <div
-                  key={course.id}
-                  className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-blue-300 transition space-y-3"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
-                      {course.provider}
-                    </span>
-                    <span className="text-[11px] font-bold text-emerald-700">
-                      {course.matchPercentage}% Match
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-900 line-clamp-1">
-                      {course.title}
-                    </h3>
-                    <p className="text-[11px] text-slate-500 line-clamp-2 mt-1">
-                      {course.recommendationReason}
-                    </p>
-                  </div>
-                  <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
-                    <button
-                      onClick={() => openWhyRecommended(course.id)}
-                      className="text-[11px] font-bold text-blue-700 hover:text-blue-900"
-                    >
-                      Why recommended?
-                    </button>
-                    <Link
-                      href="/employee/courses"
-                      className="text-blue-700 font-bold hover:underline"
-                    >
-                      Enroll →
-                    </Link>
-                  </div>
+              {recommendations.length === 0 ? (
+                <div className="col-span-2 py-8 text-center text-xs text-slate-400">
+                  No recommendations yet — complete at least one assessment to get personalised course suggestions
                 </div>
-              ))}
+              ) : (
+                recommendations.slice(0, 2).map((rec) => (
+                  <div
+                    key={rec.courseId}
+                    className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-blue-300 transition space-y-3"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
+                        {rec.providerName}
+                      </span>
+                      <span className="text-[11px] font-bold text-emerald-700">
+                        {Math.round(rec.recommendationScore * 100)}% Match
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-bold text-slate-900 line-clamp-1">
+                        {rec.title}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-1">
+                        {rec.reasons[0] ?? `Targets ${rec.competencyName}`}
+                      </p>
+                    </div>
+                    <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
+                      <button
+                        onClick={() => openWhyRecommended(rec)}
+                        className="text-[11px] font-bold text-blue-700 hover:text-blue-900"
+                      >
+                        Why recommended?
+                      </button>
+                      {rec.courseUrl ? (
+                        <a href={rec.courseUrl} target="_blank" rel="noopener noreferrer"
+                          className="text-blue-700 font-bold hover:underline">
+                          Enroll →
+                        </a>
+                      ) : (
+                        <Link href="/employee/courses" className="text-blue-700 font-bold hover:underline">
+                          View →
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -456,12 +453,22 @@ export default function EmployeeDashboardPage() {
           <div className="space-y-4 text-xs">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-slate-900">{selectedCourseExplanation.provider}</span>
-                <span className="text-emerald-700 font-bold">{selectedCourseExplanation.match}% Match Weight</span>
+                <span className="font-bold text-slate-900">{selectedCourseExplanation.providerName}</span>
+                <span className="text-emerald-700 font-bold">{Math.round(selectedCourseExplanation.recommendationScore * 100)}% Match</span>
               </div>
               <p className="text-slate-600 leading-relaxed">
-                {selectedCourseExplanation.reason}
+                {selectedCourseExplanation.reasons.join(" ") || `Targets competency: ${selectedCourseExplanation.competencyName}`}
               </p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-center">
+              <div className="p-3 bg-white border border-slate-200 rounded-xl">
+                <span className="text-[10px] text-slate-400 font-bold uppercase">Gap Closed</span>
+                <p className="text-lg font-black text-slate-900">{selectedCourseExplanation.skillGap} pts</p>
+              </div>
+              <div className="p-3 bg-white border border-slate-200 rounded-xl">
+                <span className="text-[10px] text-slate-400 font-bold uppercase">Difficulty</span>
+                <p className="text-lg font-black text-blue-900">{selectedCourseExplanation.difficultyLevel}</p>
+              </div>
             </div>
           </div>
         </Modal>
