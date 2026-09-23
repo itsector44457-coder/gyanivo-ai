@@ -2,171 +2,190 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  Compass,
   CheckCircle2,
   PlayCircle,
   Clock,
   Award,
-  Sparkles,
   Layers,
   Loader2,
   AlertCircle,
   RefreshCw,
-  ExternalLink,
   BookOpen,
   Target,
 } from "lucide-react";
-import { getMyLearningPath, PersonalizedLearningPath, LearningPathMilestone, CourseDifficulty } from "@/lib/api/courses";
+import {
+  getMyLearningPath,
+  type PersonalizedLearningPath,
+  type LearningPathMilestone,
+  type CourseDifficulty,
+} from "@/lib/api/courses";
+
+/* ── helpers ───────────────────────────────────────── */
 
 const MILESTONE_ICONS = {
-  COURSE: BookOpen,
+  COURSE:       BookOpen,
   REASSESSMENT: Target,
-  GOAL: Award,
+  GOAL:         Award,
 };
 
-const DIFFICULTY_COLORS: Record<CourseDifficulty, string> = {
-  FOUNDATIONAL: "text-slate-600 bg-slate-100",
-  BEGINNER: "text-emerald-700 bg-emerald-50 border border-emerald-200",
-  INTERMEDIATE: "text-amber-700 bg-amber-50 border border-amber-200",
-  ADVANCED: "text-red-700 bg-red-50 border border-red-200",
+const DIFFICULTY_PILLS: Record<CourseDifficulty, string> = {
+  FOUNDATIONAL: "bg-gray-100 text-gray-600",
+  BEGINNER:     "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200",
+  INTERMEDIATE: "bg-amber-50 text-amber-700 ring-1 ring-amber-200",
+  ADVANCED:     "bg-red-50 text-red-600 ring-1 ring-red-200",
 };
 
-function formatDuration(mins?: number): string {
-  if (!mins) return "";
-  if (mins < 60) return `${mins}m`;
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
+function mins(m?: number) {
+  if (!m) return null;
+  const h = Math.floor(m / 60);
+  const rem = m % 60;
+  if (h && rem) return `${h}h ${rem}m`;
+  if (h) return `${h}h`;
+  return `${m}m`;
 }
 
-function MilestoneCard({ milestone, isLast }: { milestone: LearningPathMilestone; isLast: boolean }) {
+/* ── milestone card ────────────────────────────────── */
+
+function MilestoneCard({
+  milestone,
+  isLast,
+}: {
+  milestone: LearningPathMilestone;
+  isLast: boolean;
+}) {
   const Icon = MILESTONE_ICONS[milestone.type];
 
-  const stepColorClass =
-    milestone.type === "GOAL"
-      ? "border-emerald-400 bg-emerald-50"
-      : milestone.type === "REASSESSMENT"
-      ? "border-purple-300 bg-purple-50"
-      : milestone.isCompleted
-      ? "border-emerald-300 bg-emerald-50/40"
-      : "border-blue-300 bg-white";
+  const iconBg =
+    milestone.type === "GOAL"        ? "bg-emerald-600"
+    : milestone.type === "REASSESSMENT" ? "bg-violet-600"
+    : milestone.isCompleted           ? "bg-emerald-500"
+    : "bg-blue-600";
 
-  const iconColorClass =
-    milestone.type === "GOAL"
-      ? "bg-emerald-600 text-white"
-      : milestone.type === "REASSESSMENT"
-      ? "bg-purple-600 text-white"
-      : milestone.isCompleted
-      ? "bg-emerald-500 text-white"
-      : "bg-[#1E3A8A] text-white";
+  const cardBorder =
+    milestone.type === "GOAL"           ? "border-emerald-200 bg-emerald-50/30"
+    : milestone.type === "REASSESSMENT" ? "border-violet-200 bg-violet-50/20"
+    : milestone.isCompleted             ? "border-gray-200 bg-gray-50/40"
+    : "border-gray-200 bg-white";
+
+  const duration = mins(milestone.durationMinutes);
 
   return (
     <div className="flex gap-4">
-      {/* Step indicator column */}
-      <div className="flex flex-col items-center">
-        <div className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm ${iconColorClass}`}>
+      {/* timeline column */}
+      <div className="flex flex-col items-center pt-0.5">
+        <div
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white shadow-sm ${iconBg}`}
+        >
           {milestone.isCompleted ? (
-            <CheckCircle2 className="h-4.5 w-4.5" />
+            <CheckCircle2 className="h-4 w-4" />
           ) : (
             <Icon className="h-4 w-4" />
           )}
         </div>
-        {!isLast && <div className="w-px flex-1 bg-slate-200 mt-1.5 mb-0" />}
+        {!isLast && <div className="mt-1.5 w-px flex-1 bg-gray-200" />}
       </div>
 
-      {/* Card */}
-      <div className={`flex-1 rounded-xl border p-4 shadow-2xs mb-4 ${stepColorClass}`}>
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-          <div className="space-y-1.5 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+      {/* card */}
+      <div className={`mb-4 flex-1 rounded-xl border p-4 ${cardBorder}`}>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex-1 space-y-1.5">
+
+            {/* meta row */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] font-semibold text-gray-400">
                 Step {milestone.stepNumber}
               </span>
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${
-                milestone.type === "GOAL"
-                  ? "bg-emerald-100 text-emerald-800"
-                  : milestone.type === "REASSESSMENT"
-                  ? "bg-purple-100 text-purple-800"
-                  : "bg-blue-100 text-blue-800"
-              }`}>
-                {milestone.type === "REASSESSMENT" ? "Re-Assessment" : milestone.type}
+              <span
+                className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${
+                  milestone.type === "GOAL"           ? "bg-emerald-100 text-emerald-700"
+                  : milestone.type === "REASSESSMENT" ? "bg-violet-100 text-violet-700"
+                  : "bg-blue-100 text-blue-700"
+                }`}
+              >
+                {milestone.type === "REASSESSMENT" ? "Re-assessment" : milestone.type.toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
               </span>
               {milestone.difficultyLevel && (
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${DIFFICULTY_COLORS[milestone.difficultyLevel]}`}>
-                  {milestone.difficultyLevel}
+                <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${DIFFICULTY_PILLS[milestone.difficultyLevel]}`}>
+                  {milestone.difficultyLevel.toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
                 </span>
               )}
               {milestone.isCompleted && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                <span className="rounded px-1.5 py-0.5 text-[10px] font-semibold bg-emerald-100 text-emerald-700">
                   Completed
                 </span>
               )}
             </div>
 
-            <h3 className="text-sm font-bold text-slate-900 leading-snug">{milestone.title}</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">{milestone.description}</p>
+            <h3 className="text-sm font-semibold text-gray-900 leading-snug">
+              {milestone.title}
+            </h3>
+            <p className="text-[12px] leading-relaxed text-gray-500">
+              {milestone.description}
+            </p>
 
-            <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 pt-0.5">
-              {milestone.durationMinutes && (
+            {/* info row */}
+            <div className="flex flex-wrap items-center gap-3 pt-0.5 text-[11px] text-gray-400">
+              {duration && (
                 <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {formatDuration(milestone.durationMinutes)}
+                  <Clock className="h-3 w-3" /> {duration}
                 </span>
               )}
               {milestone.providerName && (
-                <span className="text-blue-600 font-medium">{milestone.providerName}</span>
+                <span className="font-medium text-blue-600">{milestone.providerName}</span>
               )}
               {milestone.targetCompetencyScore && (
-                <span className="text-slate-600">
-                  Target: <strong>{milestone.targetCompetencyScore}%</strong>
-                </span>
+                <span>Target: <strong className="text-gray-700">{milestone.targetCompetencyScore}%</strong></span>
               )}
               {milestone.estimatedScoreGain && (
-                <span className="text-emerald-700 font-bold">
-                  +{milestone.estimatedScoreGain} pts estimated gain
+                <span className="font-semibold text-emerald-600">
+                  +{milestone.estimatedScoreGain} pts estimated
                 </span>
               )}
             </div>
           </div>
 
-          {/* Action */}
-          {milestone.type === "COURSE" && milestone.courseUrl && !milestone.isCompleted && (
-            <a
-              href={milestone.courseUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 inline-flex items-center gap-1 rounded-lg bg-[#1E3A8A] px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-900 transition shadow-sm"
-            >
-              <PlayCircle className="h-3.5 w-3.5" /> Start
-            </a>
-          )}
-          {milestone.type === "COURSE" && milestone.isCompleted && (
-            <span className="flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-100 px-3 py-1.5 rounded-lg">
-              <CheckCircle2 className="h-3.5 w-3.5" /> Completed
-            </span>
-          )}
-          {milestone.type === "REASSESSMENT" && (
-            <span className="flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-purple-700 bg-purple-100 px-3 py-1.5 rounded-lg">
-              <Target className="h-3.5 w-3.5" /> Diagnostic
-            </span>
-          )}
+          {/* action */}
+          <div className="shrink-0">
+            {milestone.type === "COURSE" && milestone.courseUrl && !milestone.isCompleted && (
+              <a
+                href={milestone.courseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-blue-700"
+              >
+                <PlayCircle className="h-3.5 w-3.5" /> Start
+              </a>
+            )}
+            {milestone.type === "COURSE" && milestone.isCompleted && (
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-[12px] font-semibold text-emerald-700 ring-1 ring-emerald-200">
+                <CheckCircle2 className="h-3.5 w-3.5" /> Done
+              </span>
+            )}
+            {milestone.type === "REASSESSMENT" && (
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-violet-50 px-3 py-1.5 text-[12px] font-semibold text-violet-700 ring-1 ring-violet-200">
+                <Target className="h-3.5 w-3.5" /> Diagnostic
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
+/* ── page ──────────────────────────────────────────── */
+
 export default function EmployeeLearningPathPage() {
-  const [learningPath, setLearningPath] = useState<PersonalizedLearningPath | null>(null);
+  const [path, setPath]   = useState<PersonalizedLearningPath | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadPath = useCallback(async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await getMyLearningPath();
-      setLearningPath(data);
+      setPath(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load learning path");
     } finally {
@@ -174,123 +193,114 @@ export default function EmployeeLearningPathPage() {
     }
   }, []);
 
-  useEffect(() => {
-    loadPath();
-  }, [loadPath]);
+  useEffect(() => { load(); }, [load]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-24">
-        <Loader2 className="h-7 w-7 animate-spin text-blue-600 mr-3" />
-        <p className="text-sm text-slate-600 font-medium">Generating your personalized learning roadmap…</p>
+      <div className="flex h-80 flex-col items-center justify-center gap-3 text-gray-400">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        <p className="text-sm">Building your learning path…</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-red-500" />
-        <p className="text-sm text-slate-700 font-medium">{error}</p>
+      <div className="flex flex-col items-center justify-center gap-4 py-20">
+        <AlertCircle className="h-9 w-9 text-red-400" />
+        <p className="text-sm text-gray-600">{error}</p>
         <button
-          onClick={loadPath}
-          className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-[#1E3A8A] text-white rounded-lg"
+          onClick={load}
+          className="flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-700"
         >
-          <RefreshCw className="h-3.5 w-3.5" /> Retry
+          <RefreshCw className="h-3.5 w-3.5" /> Try again
         </button>
       </div>
     );
   }
 
-  if (!learningPath || learningPath.milestones.length === 0) {
+  if (!path || path.milestones.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <CheckCircle2 className="h-12 w-12 text-emerald-500" />
-        <p className="text-lg font-black text-slate-900">All Competency Benchmarks Met!</p>
-        <p className="text-sm text-slate-500">No active skill gaps identified for your job role.</p>
+      <div className="flex flex-col items-center justify-center gap-3 py-20">
+        <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+        <p className="text-lg font-semibold text-gray-900">All benchmarks met</p>
+        <p className="text-sm text-gray-500">No active skill gaps for your role right now.</p>
       </div>
     );
   }
 
-  const completedMilestones = learningPath.milestones.filter((m) => m.isCompleted).length;
-  const progressPercent = Math.round((completedMilestones / learningPath.milestones.length) * 100);
+  const completed = path.milestones.filter((m) => m.isCompleted).length;
+  const progress  = Math.round((completed / path.milestones.length) * 100);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              Personalized Learning Roadmap
-            </h1>
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
-              Live
-            </span>
-          </div>
-          <p className="text-xs text-slate-600 mt-1">
-            Focus: <strong className="text-blue-900">{learningPath.primaryFocusCompetency}</strong> • {learningPath.jobRole} Benchmark
-          </p>
+
+      {/* ── header ── */}
+      <div className="border-b border-gray-200 pb-5">
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl font-semibold text-gray-900">Learning path</h1>
+          <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Live
+          </span>
         </div>
+        <p className="mt-1 text-sm text-gray-500">
+          Focused on: <span className="font-medium text-gray-700">{path.primaryFocusCompetency}</span>
+          {" · "}{path.jobRole} benchmarks
+        </p>
       </div>
 
-      {/* Overview Banner */}
-      <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50/60 p-5 shadow-2xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-blue-700" />
-              <h2 className="text-base font-bold text-blue-950">
-                Calibrated Milestone Sequence — {learningPath.employeeName}
-              </h2>
-            </div>
-            <p className="text-xs text-blue-900/80 max-w-2xl leading-relaxed">
-              Dynamically generated to close {learningPath.totalGapsIdentified} identified skill gap{learningPath.totalGapsIdentified > 1 ? "s" : ""} through structured training modules and adaptive re-assessments.
+      {/* ── overview banner ── */}
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+          <div>
+            <p className="text-sm font-semibold text-gray-900">{path.employeeName}'s roadmap</p>
+            <p className="mt-1 text-[12px] leading-relaxed text-gray-500">
+              {path.totalGapsIdentified} skill gap{path.totalGapsIdentified !== 1 ? "s" : ""} to close through structured training and adaptive re-assessments.
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-3 flex-shrink-0">
-            <div className="text-center bg-white/60 rounded-xl p-3 border border-blue-200">
-              <div className="text-xl font-black text-blue-900">{learningPath.milestones.length}</div>
-              <div className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Steps</div>
-            </div>
-            <div className="text-center bg-white/60 rounded-xl p-3 border border-blue-200">
-              <div className="text-xl font-black text-blue-900">{learningPath.estimatedTotalHours}h</div>
-              <div className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Est. Hours</div>
-            </div>
-            <div className="text-center bg-white/60 rounded-xl p-3 border border-blue-200">
-              <div className="text-xl font-black text-emerald-700">{learningPath.totalGapsIdentified}</div>
-              <div className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Gaps</div>
-            </div>
+
+          <div className="flex shrink-0 gap-3">
+            {[
+              { value: path.milestones.length, label: "Steps",     icon: Layers },
+              { value: `${path.estimatedTotalHours}h`, label: "Est. time", icon: Clock },
+              { value: path.totalGapsIdentified, label: "Gaps",    icon: AlertCircle },
+            ].map(({ value, label, icon: Icon }) => (
+              <div key={label} className="rounded-xl bg-white px-4 py-3 text-center shadow-sm ring-1 ring-gray-200">
+                <p className="text-lg font-bold text-gray-900">{value}</p>
+                <p className="mt-0.5 text-[10px] font-medium text-gray-400">{label}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Progress bar */}
-        {progressPercent > 0 && (
-          <div className="mt-4 space-y-1">
-            <div className="flex justify-between text-[11px]">
-              <span className="font-semibold text-blue-900">Overall Progress</span>
-              <span className="text-blue-700 font-bold">{progressPercent}%</span>
+        {progress > 0 && (
+          <div className="mt-5 space-y-1.5">
+            <div className="flex justify-between text-[12px]">
+              <span className="font-medium text-gray-600">Overall progress</span>
+              <span className="font-semibold text-blue-700">{progress}%</span>
             </div>
-            <div className="h-2 bg-blue-200 rounded-full overflow-hidden">
+            <div className="h-2 overflow-hidden rounded-full bg-gray-200">
               <div
-                className="h-full bg-blue-700 rounded-full transition-all duration-500"
-                style={{ width: `${progressPercent}%` }}
+                className="h-full rounded-full bg-blue-600 transition-all duration-500"
+                style={{ width: `${progress}%` }}
               />
             </div>
           </div>
         )}
       </div>
 
-      {/* Milestone Timeline */}
-      <div className="space-y-0">
-        {learningPath.milestones.map((milestone, idx) => (
+      {/* ── timeline ── */}
+      <div>
+        {path.milestones.map((m, i) => (
           <MilestoneCard
-            key={milestone.stepNumber}
-            milestone={milestone}
-            isLast={idx === learningPath.milestones.length - 1}
+            key={m.stepNumber}
+            milestone={m}
+            isLast={i === path.milestones.length - 1}
           />
         ))}
       </div>
+
     </div>
   );
 }

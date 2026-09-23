@@ -19,66 +19,64 @@ export function HorizontalCompetencyBar({
   size = "md",
   className = "",
 }: HorizontalCompetencyBarProps) {
-  const currentPercent = Math.min(100, Math.max(0, (current / max) * 100));
-  const targetPercent = Math.min(100, Math.max(0, (target / max) * 100));
-  const isTargetMet = current >= target;
+  const currentPct = Math.min(100, Math.max(0, (current / max) * 100));
+  const targetPct  = Math.min(100, Math.max(0, (target  / max) * 100));
+  const met        = current >= target;
+  const gap        = target - current;
 
-  // Status color
-  const getBarColor = () => {
-    if (isTargetMet) return "bg-emerald-600";
-    if (target - current <= 10) return "bg-blue-600";
-    if (target - current <= 25) return "bg-amber-500";
-    return "bg-rose-500";
-  };
+  const barColor =
+    met             ? "bg-emerald-500"
+    : gap <= 10     ? "bg-blue-500"
+    : gap <= 25     ? "bg-amber-400"
+    : "bg-red-400";
 
-  const heights = {
-    sm: "h-2",
-    md: "h-3",
-    lg: "h-4",
+  const heights: Record<"sm" | "md" | "lg", string> = {
+    sm: "h-1.5",
+    md: "h-2",
+    lg: "h-3",
   };
 
   return (
     <div className={`w-full ${className}`}>
       {showLabels && (
-        <div className="flex items-center justify-between mb-1.5 text-xs">
-          <span className="font-medium text-slate-800">{name}</span>
-          <div className="flex items-center gap-3">
-            <span className="text-slate-500">
-              Score: <strong className="text-slate-900">{current}</strong> / {max}
+        <div className="mb-1.5 flex items-center justify-between text-[12px]">
+          <span className="font-medium text-gray-700">{name}</span>
+          <div className="flex items-center gap-3 text-gray-500">
+            <span>
+              Score: <strong className="text-gray-900">{current}</strong>/{max}
             </span>
-            <span className="text-slate-400">|</span>
-            <span className="text-slate-500">
+            <span className="text-gray-300">|</span>
+            <span>
               Target: <span className="font-semibold text-blue-700">{target}</span>
             </span>
-            {target > current ? (
-              <span className="text-[11px] font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
-                -{target - current}
+            {met ? (
+              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-emerald-200">
+                Met
               </span>
             ) : (
-              <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                Target Met
+              <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-semibold text-red-500 ring-1 ring-red-200">
+                −{gap}
               </span>
             )}
           </div>
         </div>
       )}
 
-      {/* Progress Bar Container */}
-      <div className={`relative w-full bg-slate-100 rounded-full overflow-visible ${heights[size]}`}>
-        {/* Progress fill */}
+      <div className={`relative w-full overflow-visible rounded-full bg-gray-100 ${heights[size]}`}>
+        {/* fill */}
         <div
-          className={`${heights[size]} rounded-full transition-all duration-500 ${getBarColor()}`}
-          style={{ width: `${currentPercent}%` }}
+          className={`${heights[size]} rounded-full transition-all duration-500 ${barColor}`}
+          style={{ width: `${currentPct}%` }}
         />
 
-        {/* Target marker indicator */}
+        {/* target marker */}
         <div
-          className="absolute top-0 bottom-0 w-0.5 bg-slate-900 z-10 -mt-1 -mb-1"
-          style={{ left: `${targetPercent}%` }}
-          title={`Role Target: ${target}%`}
+          className="absolute bottom-0 top-0 w-0.5 bg-gray-500/60"
+          style={{ left: `${targetPct}%` }}
+          title={`Target: ${target}%`}
         >
-          <div className="absolute -top-3.5 -translate-x-1/2 text-[9px] font-bold text-slate-600 uppercase tracking-tighter bg-white/90 px-1 rounded shadow-xs border border-slate-200">
-            Target
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-white px-1 text-[9px] font-semibold text-gray-500 shadow-sm ring-1 ring-gray-200">
+            {target}%
           </div>
         </div>
       </div>

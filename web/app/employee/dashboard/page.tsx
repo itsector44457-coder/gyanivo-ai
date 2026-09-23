@@ -2,46 +2,59 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   TrendingUp,
   AlertTriangle,
   BookOpen,
   FileCheck2,
   ArrowRight,
-  Sparkles,
-  HelpCircle,
-  Clock,
   CheckCircle2,
-  Calendar,
   Layers,
   Award,
-  ChevronRight,
-  ExternalLink,
+  LineChart,
   Loader2,
   AlertCircle,
+  HelpCircle,
 } from "lucide-react";
 import { getMyRecommendations, type CourseRecommendation } from "@/lib/api/courses";
 import { HorizontalCompetencyBar } from "@/components/ui/HorizontalCompetencyBar";
-import { Badge, PrototypeBadge, SampleCatalogueBadge } from "@/components/ui/Badge";
+import { SampleCatalogueBadge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { useAuth } from "@/lib/auth/AuthContext";
-import { getMyDashboardStats, EmployeeDashboardResponse, EvaluatedCompetency } from "@/lib/api/competencies";
+import {
+  getMyDashboardStats,
+  type EmployeeDashboardResponse,
+  type EvaluatedCompetency,
+} from "@/lib/api/competencies";
+
+/* ─── helpers ─────────────────────────────────────── */
+
+function greet() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+function severityColor(s: string) {
+  if (s === "CRITICAL") return "text-red-600 bg-red-50 ring-red-200";
+  if (s === "HIGH") return "text-amber-700 bg-amber-50 ring-amber-200";
+  return "text-blue-700 bg-blue-50 ring-blue-200";
+}
+
+/* ─── page ────────────────────────────────────────── */
 
 export default function EmployeeDashboardPage() {
-  const router = useRouter();
   const { user } = useAuth();
-  const [stats, setStats] = useState<EmployeeDashboardResponse['data'] | null>(null);
+  const [stats, setStats] = useState<EmployeeDashboardResponse["data"] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState<CourseRecommendation[]>([]);
-
-  // Explainability Modals
-  const [selectedGapExplanation, setSelectedGapExplanation] = useState<EvaluatedCompetency | null>(null);
-  const [selectedCourseExplanation, setSelectedCourseExplanation] = useState<CourseRecommendation | null>(null);
+  const [selectedGap, setSelectedGap] = useState<EvaluatedCompetency | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<CourseRecommendation | null>(null);
 
   useEffect(() => {
-    async function loadDashboard() {
+    async function load() {
       try {
         setLoading(true);
         const [dashRes, recRes] = await Promise.all([
@@ -51,222 +64,175 @@ export default function EmployeeDashboardPage() {
         if (dashRes.success && dashRes.data) setStats(dashRes.data);
         setRecommendations(recRes);
       } catch (err: any) {
-        setError(err.message || "Failed to load dashboard metrics");
+        setError(err.message || "Failed to load dashboard");
       } finally {
         setLoading(false);
       }
     }
-    loadDashboard();
+    load();
   }, []);
 
-  const openWhyRecommended = (rec: CourseRecommendation) => {
-    setSelectedCourseExplanation(rec);
-  };
-
-  const displayName = user ? user.firstName : "Rahul";
-  const designation = user?.profile?.designation || "Statistical Officer";
-  const department = user?.profile?.department?.name || "National Statistical Office (NSO)";
+  const displayName = user?.firstName ?? "there";
+  const designation = user?.profile?.designation ?? "Statistical Officer";
+  const department = user?.profile?.department?.name ?? "National Statistical Office (NSO)";
 
   if (loading) {
     return (
-      <div className="flex h-96 flex-col items-center justify-center gap-3">
-        <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
-        <p className="text-xs text-slate-500 font-medium">Aggregating competency intelligence from database...</p>
+      <div className="flex h-96 flex-col items-center justify-center gap-3 text-gray-500">
+        <Loader2 className="h-7 w-7 animate-spin text-blue-500" />
+        <p className="text-sm">Loading your dashboard…</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
+    <div className="space-y-7">
+
+      {/* ── header ── */}
+      <div className="flex flex-col gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              Good morning, {displayName}
-            </h1>
-            <span className="text-xl">👋</span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300">
-              <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-              DATABASE VERIFIED
+          <h1 className="text-2xl font-bold text-gray-900">
+            {greet()}, {displayName} 👋
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            <span className="font-medium text-gray-700">{designation}</span>
+            <span className="mx-2 text-gray-300">·</span>
+            {department}
+            <span className="mx-2 text-gray-300">·</span>
+            <span className="font-mono text-[12px] text-gray-400">
+              {user?.profile?.employeeCode ?? "MOSPI-SSS-8842"}
             </span>
-          </div>
-          <p className="text-xs text-slate-600 mt-1 flex flex-wrap items-center gap-2">
-            <span className="font-semibold text-blue-900">{designation}</span>
-            <span>•</span>
-            <span>{department}</span>
-            <span>•</span>
-            <span className="text-slate-400 font-mono">Cadre ID: {user?.profile?.employeeCode || "MOSPI-SSS-8842"}</span>
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/employee/assessments"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#1E3A8A] px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-blue-900 transition"
-          >
-            <FileCheck2 className="h-4 w-4" />
-            Start Diagnostic Assessment
-          </Link>
-        </div>
+        <Link
+          href="/employee/assessments"
+          className="inline-flex items-center gap-2 self-start rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-500/20 transition hover:bg-blue-700"
+        >
+          <FileCheck2 className="h-4 w-4" />
+          Start assessment
+        </Link>
       </div>
 
+      {/* error notice */}
       {error && (
-        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3 text-xs text-amber-800">
-          <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
           <div>
-            <p className="font-bold">Database Metrics Notice</p>
-            <p className="opacity-90 mt-0.5">{error}</p>
+            <p className="font-semibold">Couldn't load some metrics</p>
+            <p className="mt-0.5 text-xs text-amber-700">{error}</p>
           </div>
         </div>
       )}
 
-      {/* 4 Summary Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Overall Score */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2 relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Overall Competency
-            </span>
-            <Award className="h-4 w-4 text-blue-600" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-slate-900">
-              {stats?.overallScore ?? 57.4}%
-            </span>
-            <span className="text-xs font-bold text-emerald-600 flex items-center">
-              <TrendingUp className="h-3.5 w-3.5 mr-0.5" /> Role Weighted
-            </span>
-          </div>
-          <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+      {/* ── stat cards ── */}
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+
+        <StatCard
+          label="Overall competency"
+          icon={<Award className="h-4 w-4 text-blue-500" />}
+        >
+          <p className="mt-1 text-3xl font-bold text-gray-900">
+            {stats?.overallScore ?? 57.4}
+            <span className="text-lg text-gray-400">%</span>
+          </p>
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-gray-100">
             <div
-              className="h-full bg-blue-600 rounded-full transition-all duration-500"
+              className="h-full rounded-full bg-blue-500 transition-all duration-700"
               style={{ width: `${stats?.overallScore ?? 57.4}%` }}
             />
           </div>
-        </div>
+          <p className="mt-2 text-xs text-gray-400">Role-weighted average</p>
+        </StatCard>
 
-        {/* Critical Gaps */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500">
-              Critical Skill Gaps
-            </span>
-            <AlertTriangle className="h-4 w-4 text-rose-600" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-rose-600">
-              {stats?.criticalGapsCount ?? 2}
-            </span>
-            <span className="text-xs font-medium text-slate-500">
-              of {stats?.totalRequiredCompetencies ?? 7} requirements
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500">Immediate training intervention required</p>
-        </div>
-
-        {/* Target Met */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">
-              Benchmarks Met
-            </span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-emerald-700">
-              {stats?.competenciesMeetingTarget ?? 2}
-            </span>
-            <span className="text-xs font-medium text-slate-500">
-              proficient areas
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500">Meets or exceeds cadre targets</p>
-        </div>
-
-        {/* Learning History Events */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Evaluated Competencies
-            </span>
-            <Layers className="h-4 w-4 text-blue-600" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black text-blue-900">
-              {stats ? stats.totalRequiredCompetencies - stats.unassessedCompetencies : 6}
-            </span>
-            <span className="text-xs font-medium text-slate-500">
-              / {stats?.totalRequiredCompetencies ?? 7} mapped
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500">
-            {stats?.unassessedCompetencies ? `${stats.unassessedCompetencies} unassessed` : "All competencies assessed"}
+        <StatCard
+          label="Skill gaps"
+          icon={<AlertTriangle className="h-4 w-4 text-red-400" />}
+        >
+          <p className="mt-1 text-3xl font-bold text-red-500">
+            {stats?.criticalGapsCount ?? 2}
           </p>
-        </div>
+          <p className="mt-2 text-xs text-gray-400">
+            of {stats?.totalRequiredCompetencies ?? 7} competencies need work
+          </p>
+        </StatCard>
+
+        <StatCard
+          label="Benchmarks met"
+          icon={<CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+        >
+          <p className="mt-1 text-3xl font-bold text-emerald-600">
+            {stats?.competenciesMeetingTarget ?? 2}
+          </p>
+          <p className="mt-2 text-xs text-gray-400">proficient areas</p>
+        </StatCard>
+
+        <StatCard
+          label="Competencies assessed"
+          icon={<Layers className="h-4 w-4 text-blue-400" />}
+        >
+          <p className="mt-1 text-3xl font-bold text-gray-900">
+            {stats
+              ? stats.totalRequiredCompetencies - stats.unassessedCompetencies
+              : 6}
+          </p>
+          <p className="mt-2 text-xs text-gray-400">
+            / {stats?.totalRequiredCompetencies ?? 7} required
+          </p>
+        </StatCard>
+
       </div>
 
-      {/* Main 2-Column Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Top Priority Skill Gaps (2 cols) */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-5">
-            <div className="flex items-center justify-between">
+      {/* ── main content ── */}
+      <div className="grid gap-6 lg:grid-cols-3">
+
+        {/* left — gaps + recommendations */}
+        <div className="space-y-6 lg:col-span-2">
+
+          {/* skill gaps */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="mb-5 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-base font-black text-slate-900">
-                  Priority Competency Gaps for Statistical Officer
+                <h2 className="text-base font-semibold text-gray-900">
+                  Priority skill gaps
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Automatically ranked by gap deficit, role importance weight, and mandatory status
+                <p className="mt-1 text-sm text-gray-500">
+                  Ranked by gap size, role weight and mandatory status.
                 </p>
               </div>
               <Link
                 href="/employee/skill-gaps"
-                className="text-xs font-bold text-blue-700 hover:text-blue-900 flex items-center gap-1"
+                className="shrink-0 text-xs font-semibold text-blue-600 hover:text-blue-800"
               >
-                View All <ArrowRight className="h-3.5 w-3.5" />
+                View all →
               </Link>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {stats?.topPriorityGaps?.map((gap, i) => (
                 <div
                   key={gap.competencyId}
-                  className="p-4 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-3 hover:bg-slate-50 transition"
+                  className="rounded-xl border border-gray-100 bg-gray-50/60 p-4 transition hover:bg-gray-50"
                 >
-                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 font-mono text-[10px] font-bold text-slate-700">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-[10px] font-bold text-gray-600">
                         {i + 1}
                       </span>
-                      <span className="font-bold text-xs text-slate-900">
-                        {gap.name}
-                      </span>
-                      <span className="text-[10px] font-mono text-slate-400">
-                        {gap.code}
-                      </span>
+                      <span className="text-sm font-semibold text-gray-900">{gap.name}</span>
+                      <span className="font-mono text-[10px] text-gray-400">{gap.code}</span>
                       {gap.isMandatory && (
-                        <span className="text-[9px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200">
+                        <span className="rounded px-1.5 py-0.5 text-[9px] font-bold text-red-600 ring-1 ring-red-200">
                           MANDATORY
                         </span>
                       )}
                     </div>
-
                     <div className="flex items-center gap-2">
-                      <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                          gap.severity === "CRITICAL"
-                            ? "bg-rose-100 text-rose-800"
-                            : gap.severity === "HIGH"
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-blue-100 text-blue-800"
-                        }`}
-                      >
-                        {gap.severity}
+                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ${severityColor(gap.severity)}`}>
+                        {gap.severity.toLowerCase()}
                       </span>
-                      <span className="text-xs font-bold text-slate-900">
-                        {gap.currentScore !== null ? `${gap.currentScore}%` : "Not Assessed"} / {gap.requiredScore}%
+                      <span className="text-xs font-semibold text-gray-700">
+                        {gap.currentScore !== null ? `${gap.currentScore}%` : "—"} / {gap.requiredScore}%
                       </span>
                     </div>
                   </div>
@@ -279,15 +245,13 @@ export default function EmployeeDashboardPage() {
                     size="sm"
                   />
 
-                  <div className="flex items-center justify-between text-[11px]">
-                    <p className="text-slate-600 font-medium truncate max-w-md">
-                      {gap.reason}
-                    </p>
+                  <div className="mt-2 flex items-center justify-between gap-4">
+                    <p className="truncate text-[11px] text-gray-500">{gap.reason}</p>
                     <button
-                      onClick={() => setSelectedGapExplanation(gap)}
-                      className="font-bold text-blue-700 hover:text-blue-900 shrink-0 ml-2"
+                      onClick={() => setSelectedGap(gap)}
+                      className="shrink-0 text-[11px] font-semibold text-blue-600 hover:text-blue-800"
                     >
-                      Why this priority? →
+                      Why this? →
                     </button>
                   </div>
                 </div>
@@ -295,184 +259,251 @@ export default function EmployeeDashboardPage() {
             </div>
           </div>
 
-          {/* Prototype Course Recommendation Section (Preserved with clear badge) */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-4">
-            <div className="flex items-center justify-between">
+          {/* recommendations */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-black text-slate-900">
-                    Recommended Training Programmes
+                  <h2 className="text-base font-semibold text-gray-900">
+                    Recommended training
                   </h2>
                   <SampleCatalogueBadge />
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Targeted NSSTA & iGOT modules mapped to your priority skill gaps (AI Explainable Matching)
+                <p className="mt-1 text-sm text-gray-500">
+                  NSSTA &amp; iGOT modules matched to your skill gaps.
                 </p>
               </div>
               <Link
                 href="/employee/courses"
-                className="text-xs font-bold text-blue-700 hover:text-blue-900 flex items-center gap-1"
+                className="shrink-0 text-xs font-semibold text-blue-600 hover:text-blue-800"
               >
-                Catalogue <ArrowRight className="h-3.5 w-3.5" />
+                All courses →
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {recommendations.length === 0 ? (
-                <div className="col-span-2 py-8 text-center text-xs text-slate-400">
-                  No recommendations yet — complete at least one assessment to get personalised course suggestions
-                </div>
-              ) : (
-                recommendations.slice(0, 2).map((rec) => (
+            {recommendations.length === 0 ? (
+              <div className="py-10 text-center">
+                <BookOpen className="mx-auto h-8 w-8 text-gray-300" />
+                <p className="mt-3 text-sm text-gray-500">
+                  Complete an assessment to get personalised recommendations.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {recommendations.slice(0, 2).map((rec) => (
                   <div
                     key={rec.courseId}
-                    className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-blue-300 transition space-y-3"
+                    className="rounded-xl border border-gray-200 bg-gray-50/50 p-4 transition hover:border-blue-200 hover:bg-white"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
+                      <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[10px] font-semibold text-blue-700 ring-1 ring-blue-100">
                         {rec.providerName}
                       </span>
-                      <span className="text-[11px] font-bold text-emerald-700">
-                        {Math.round(rec.recommendationScore * 100)}% Match
+                      <span className="text-[11px] font-semibold text-emerald-600">
+                        {Math.round(rec.recommendationScore * 100)}% match
                       </span>
                     </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-slate-900 line-clamp-1">
-                        {rec.title}
-                      </h3>
-                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-1">
-                        {rec.reasons[0] ?? `Targets ${rec.competencyName}`}
-                      </p>
-                    </div>
-                    <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
+                    <h3 className="mt-3 text-sm font-semibold text-gray-900 line-clamp-1">
+                      {rec.title}
+                    </h3>
+                    <p className="mt-1 text-[11px] leading-relaxed text-gray-500 line-clamp-2">
+                      {rec.reasons[0] ?? `Targets ${rec.competencyName}`}
+                    </p>
+                    <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
                       <button
-                        onClick={() => openWhyRecommended(rec)}
-                        className="text-[11px] font-bold text-blue-700 hover:text-blue-900"
+                        onClick={() => setSelectedCourse(rec)}
+                        className="text-[11px] font-semibold text-blue-600 hover:text-blue-800"
                       >
                         Why recommended?
                       </button>
                       {rec.courseUrl ? (
-                        <a href={rec.courseUrl} target="_blank" rel="noopener noreferrer"
-                          className="text-blue-700 font-bold hover:underline">
-                          Enroll →
+                        <a
+                          href={rec.courseUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] font-semibold text-blue-600 hover:underline"
+                        >
+                          Enrol →
                         </a>
                       ) : (
-                        <Link href="/employee/courses" className="text-blue-700 font-bold hover:underline">
+                        <Link href="/employee/courses" className="text-[11px] font-semibold text-blue-600 hover:underline">
                           View →
                         </Link>
                       )}
                     </div>
                   </div>
-                ))
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
+
         </div>
 
-        {/* Right Column: Cadre Progression & Recent Events (1 col) */}
+        {/* right — context + history */}
         <div className="space-y-6">
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-4">
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-              Cadre Progression Context
-            </h2>
-            <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100 space-y-2">
-              <span className="text-[10px] font-bold uppercase text-blue-800">Assigned Posting</span>
-              <p className="text-xs font-bold text-blue-950">
-                {user?.profile?.currentAssignment || "Consumer Price Index (CPI) Analytics Unit"}
+
+          {/* cadre context */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <h2 className="mb-4 text-sm font-semibold text-gray-900">Your role context</h2>
+
+            <div className="rounded-xl bg-blue-50/60 p-4 ring-1 ring-blue-100">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-blue-700">
+                Current posting
               </p>
-              <p className="text-[11px] text-blue-900/80 leading-relaxed">
-                Proficiency benchmarks are synchronized with the 2026 MoSPI Statistical Officer cadre directive.
+              <p className="mt-1.5 text-sm font-semibold text-gray-900">
+                {user?.profile?.currentAssignment ?? "Consumer Price Index (CPI) Analytics Unit"}
+              </p>
+              <p className="mt-2 text-[11px] leading-relaxed text-gray-500">
+                Benchmarks synced with the 2026 MoSPI Statistical Officer cadre directive.
               </p>
             </div>
 
-            <div className="space-y-3 pt-2">
-              <h3 className="text-xs font-bold text-slate-700">Recent Competency History Log</h3>
+            {/* recent history */}
+            <div className="mt-5">
+              <h3 className="mb-3 text-xs font-semibold text-gray-600">Recent changes</h3>
               <div className="space-y-2">
                 {stats?.recentHistory?.length ? (
                   stats.recentHistory.map((h) => (
-                    <div key={h.id} className="p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-[11px] space-y-1">
-                      <div className="flex items-center justify-between font-bold text-slate-800">
+                    <div
+                      key={h.id}
+                      className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[11px]"
+                    >
+                      <div className="flex items-center justify-between font-semibold text-gray-800">
                         <span>{h.competencyName}</span>
-                        <span className="text-blue-900">{h.previousScore}% → {h.newScore}%</span>
+                        <span className="text-blue-700">
+                          {h.previousScore}% → {h.newScore}%
+                        </span>
                       </div>
-                      <p className="text-[10px] text-slate-500">{h.changeReason || "Baseline profile assessment"}</p>
+                      <p className="mt-1 text-gray-400">
+                        {h.changeReason ?? "Baseline profile assessment"}
+                      </p>
                     </div>
                   ))
                 ) : (
-                  <div className="p-3 rounded-lg border border-dashed border-slate-200 text-center text-[11px] text-slate-400">
-                    Baseline assessment active • No recent score changes
+                  <div className="rounded-lg border border-dashed border-gray-200 p-4 text-center text-[11px] text-gray-400">
+                    No recent score changes — baseline active.
                   </div>
                 )}
               </div>
             </div>
           </div>
+
+          {/* quick links */}
+          <div className="rounded-2xl border border-gray-200 bg-white p-6">
+            <h2 className="mb-4 text-sm font-semibold text-gray-900">Quick access</h2>
+            <div className="space-y-2">
+              {[
+                { label: "Take an assessment", href: "/employee/assessments", icon: FileCheck2 },
+                { label: "My learning path", href: "/employee/learning-path", icon: BookOpen },
+                { label: "Skill gap detail", href: "/employee/skill-gaps", icon: AlertTriangle },
+                { label: "Progress report", href: "/employee/progress", icon: TrendingUp },
+              ].map(({ label, href, icon: Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="flex items-center justify-between rounded-lg border border-transparent px-3 py-2.5 text-sm text-gray-700 transition hover:border-gray-200 hover:bg-gray-50"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Icon className="h-4 w-4 text-gray-400" />
+                    {label}
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5 text-gray-300" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {/* Priority Explain Modal */}
-      {selectedGapExplanation && (
+      {/* ── gap explain modal ── */}
+      {selectedGap && (
         <Modal
-          isOpen={!!selectedGapExplanation}
-          onClose={() => setSelectedGapExplanation(null)}
-          title={`Priority Rationale: ${selectedGapExplanation.name}`}
+          isOpen={!!selectedGap}
+          onClose={() => setSelectedGap(null)}
+          title={`Why "${selectedGap.name}" is a priority`}
           maxWidth="lg"
         >
-          <div className="space-y-4 text-xs">
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-              <p className="text-slate-700 leading-relaxed font-medium">
-                {selectedGapExplanation.reason}
-              </p>
+          <div className="space-y-4 text-sm">
+            <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+              <p className="leading-relaxed text-gray-700">{selectedGap.reason}</p>
             </div>
-
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div className="p-3 bg-white border border-slate-200 rounded-xl">
-                <span className="text-[10px] text-slate-400 font-bold uppercase">Current Score</span>
-                <p className="text-lg font-black text-slate-900">{selectedGapExplanation.currentScore !== null ? `${selectedGapExplanation.currentScore}%` : "None"}</p>
+            <div className="grid grid-cols-3 gap-3 text-center text-xs">
+              <div className="rounded-xl border border-gray-100 bg-white p-3">
+                <p className="text-gray-400">Current score</p>
+                <p className="mt-1.5 text-xl font-bold text-gray-900">
+                  {selectedGap.currentScore !== null ? `${selectedGap.currentScore}%` : "None"}
+                </p>
               </div>
-              <div className="p-3 bg-white border border-slate-200 rounded-xl">
-                <span className="text-[10px] text-slate-400 font-bold uppercase">Role Benchmark</span>
-                <p className="text-lg font-black text-blue-900">{selectedGapExplanation.requiredScore}%</p>
+              <div className="rounded-xl border border-gray-100 bg-white p-3">
+                <p className="text-gray-400">Role benchmark</p>
+                <p className="mt-1.5 text-xl font-bold text-blue-700">{selectedGap.requiredScore}%</p>
               </div>
-              <div className="p-3 bg-white border border-slate-200 rounded-xl">
-                <span className="text-[10px] text-slate-400 font-bold uppercase">Point Deficit</span>
-                <p className="text-lg font-black text-rose-600">-{selectedGapExplanation.gap} pts</p>
+              <div className="rounded-xl border border-gray-100 bg-white p-3">
+                <p className="text-gray-400">Gap</p>
+                <p className="mt-1.5 text-xl font-bold text-red-500">−{selectedGap.gap} pts</p>
               </div>
             </div>
           </div>
         </Modal>
       )}
 
-      {/* Course Recommendation Explain Modal */}
-      {selectedCourseExplanation && (
+      {/* ── course explain modal ── */}
+      {selectedCourse && (
         <Modal
-          isOpen={!!selectedCourseExplanation}
-          onClose={() => setSelectedCourseExplanation(null)}
-          title={`Why Recommended: ${selectedCourseExplanation.title}`}
+          isOpen={!!selectedCourse}
+          onClose={() => setSelectedCourse(null)}
+          title={`Why "${selectedCourse.title}" is recommended`}
           maxWidth="lg"
         >
-          <div className="space-y-4 text-xs">
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <div className="space-y-4 text-sm">
+            <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-slate-900">{selectedCourseExplanation.providerName}</span>
-                <span className="text-emerald-700 font-bold">{Math.round(selectedCourseExplanation.recommendationScore * 100)}% Match</span>
+                <span className="font-semibold text-gray-900">{selectedCourse.providerName}</span>
+                <span className="font-semibold text-emerald-600">
+                  {Math.round(selectedCourse.recommendationScore * 100)}% match
+                </span>
               </div>
-              <p className="text-slate-600 leading-relaxed">
-                {selectedCourseExplanation.reasons.join(" ") || `Targets competency: ${selectedCourseExplanation.competencyName}`}
+              <p className="mt-2 leading-relaxed text-gray-600">
+                {selectedCourse.reasons.join(" ") || `Targets competency: ${selectedCourse.competencyName}`}
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-3 text-center">
-              <div className="p-3 bg-white border border-slate-200 rounded-xl">
-                <span className="text-[10px] text-slate-400 font-bold uppercase">Gap Closed</span>
-                <p className="text-lg font-black text-slate-900">{selectedCourseExplanation.skillGap} pts</p>
+            <div className="grid grid-cols-2 gap-3 text-center text-xs">
+              <div className="rounded-xl border border-gray-100 bg-white p-3">
+                <p className="text-gray-400">Gap addressed</p>
+                <p className="mt-1.5 text-xl font-bold text-gray-900">{selectedCourse.skillGap} pts</p>
               </div>
-              <div className="p-3 bg-white border border-slate-200 rounded-xl">
-                <span className="text-[10px] text-slate-400 font-bold uppercase">Difficulty</span>
-                <p className="text-lg font-black text-blue-900">{selectedCourseExplanation.difficultyLevel}</p>
+              <div className="rounded-xl border border-gray-100 bg-white p-3">
+                <p className="text-gray-400">Difficulty</p>
+                <p className="mt-1.5 text-xl font-bold text-blue-700">{selectedCourse.difficultyLevel}</p>
               </div>
             </div>
           </div>
         </Modal>
       )}
+
+    </div>
+  );
+}
+
+/* ── stat card wrapper ────────────────────────────── */
+
+function StatCard({
+  label,
+  icon,
+  children,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-5">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-medium text-gray-500">{label}</p>
+        {icon}
+      </div>
+      {children}
     </div>
   );
 }
