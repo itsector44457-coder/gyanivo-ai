@@ -9,24 +9,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC]">
-      {/* Sidebar */}
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
       <Sidebar
         isCollapsed={isCollapsed}
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         isMobileOpen={isMobileOpen}
         onCloseMobile={() => setIsMobileOpen(false)}
       />
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Navbar */}
-        <TopNavbar
-          onToggleMobileSidebar={() => setIsMobileOpen(!isMobileOpen)}
-        />
-
-        {/* Page Content Container */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopNavbar onToggleMobileSidebar={() => setIsMobileOpen(!isMobileOpen)} />
+        <main className="mx-auto w-full max-w-[1600px] flex-1 p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>

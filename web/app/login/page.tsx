@@ -136,36 +136,36 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#f9fafb]">
+    <main className="relative min-h-screen bg-[#f9fafb] dark:bg-gray-950">
 
       {/* ambient blobs */}
-      <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-blue-100/40 blur-[120px]" />
-      <div className="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-indigo-100/40 blur-[120px]" />
+      <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-blue-100/40 blur-[120px] dark:bg-blue-500/10" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-indigo-100/40 blur-[120px] dark:bg-indigo-500/10" />
 
       {/* ── top bar ── */}
-      <div className="relative z-10 border-b border-gray-200/70 bg-white/80 backdrop-blur-md">
+      <div className="relative z-10 border-b border-gray-200/70 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center">
               <img src="/Disha_AI_Logo.png" alt="Disha AI" className="h-full w-full object-contain" />
             </div>
             <div>
-              <span className="text-[17px] font-bold tracking-tight text-gray-950">
-                Disha<span className="ml-0.5 text-blue-600">AI</span>
+              <span className="text-[17px] font-bold tracking-tight text-gray-950 dark:text-white">
+                Disha<span className="ml-0.5 text-blue-600 dark:text-blue-400">AI</span>
               </span>
-              <p className="hidden text-[9px] font-medium uppercase tracking-widest text-gray-400 sm:block">
+              <p className="hidden text-[9px] font-medium uppercase tracking-widest text-gray-400 dark:text-gray-600 sm:block">
                 Skill · Learn · Grow
               </p>
             </div>
           </Link>
 
           <div className="hidden items-center gap-3 md:flex">
-            <div className="flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-3 py-1">
-              <ShieldCheck className="h-3 w-3 text-blue-600" />
-              <span className="text-[10px] font-semibold text-blue-700">SIH26101</span>
+            <div className="flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-3 py-1 dark:border-blue-500/20 dark:bg-blue-500/10">
+              <ShieldCheck className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+              <span className="text-[10px] font-semibold text-blue-700 dark:text-blue-300">SIH26101</span>
             </div>
-            <div className="h-5 w-px bg-gray-200" />
-            <p className="text-[10px] font-medium text-gray-500">
+            <div className="h-5 w-px bg-gray-200 dark:bg-gray-700" />
+            <p className="text-[10px] font-medium text-gray-500 dark:text-gray-500">
               Ministry of Statistics · Govt. of India
             </p>
             <span className="text-base">🇮🇳</span>
@@ -174,7 +174,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── page grid ── */}
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-64px)] max-w-7xl lg:grid-cols-2">
+      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-64px)] max-w-7xl lg:grid-cols-2 dark:bg-gray-950">
 
         {/* ══ LEFT — editorial panel ══ */}
         <section className="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-center">
@@ -229,29 +229,29 @@ export default function LoginPage() {
         </section>
 
         {/* ══ RIGHT — login form ══ */}
-        <section className="flex items-center justify-center px-5 py-12 sm:px-10 lg:px-14">
+        <section className="flex items-center justify-center px-5 py-12 sm:px-10 lg:px-14 dark:bg-gray-950">
           <div className="w-full max-w-[440px]">
 
             <Link
               href="/"
-              className="mb-8 inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 transition hover:text-gray-700"
+              className="mb-8 inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 transition hover:text-gray-700 dark:hover:text-gray-200"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to home
             </Link>
 
             <div>
-              <h2 className="text-3xl font-bold tracking-tight text-gray-950">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-950 dark:text-white">
                 Welcome back
               </h2>
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                 Sign in to continue your competency journey.
               </p>
             </div>
 
             {/* role selector */}
             <div className="mt-8">
-              <p className="mb-2.5 text-xs font-semibold text-gray-600">Sign in as</p>
+              <p className="mb-2.5 text-xs font-semibold text-gray-600 dark:text-gray-400">Sign in as</p>
               <div className="grid grid-cols-3 gap-2">
                 {roles.map((item) => {
                   const Icon = item.icon;
@@ -263,20 +263,24 @@ export default function LoginPage() {
                       onClick={() => handleRoleChange(item.id)}
                       className={`relative rounded-xl border p-3 text-left transition-all ${
                         active
-                          ? "border-blue-500 bg-blue-50/80 shadow-sm"
-                          : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                          ? "border-blue-500 bg-blue-50/80 shadow-sm dark:border-blue-500 dark:bg-blue-500/10"
+                          : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-700"
                       }`}
                     >
                       {active && (
-                        <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-blue-600" />
+                        <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
                       )}
-                      <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${active ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-500"}`}>
+                      <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                        active ? "bg-blue-600 text-white dark:bg-blue-500" : "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400"
+                      }`}>
                         <Icon className="h-4 w-4" />
                       </div>
-                      <p className={`mt-2.5 text-xs font-semibold ${active ? "text-blue-800" : "text-gray-700"}`}>
+                      <p className={`mt-2.5 text-xs font-semibold ${
+                        active ? "text-blue-800 dark:text-blue-300" : "text-gray-700 dark:text-gray-300"
+                      }`}>
                         {item.label}
                       </p>
-                      <p className="mt-0.5 hidden text-[10px] text-gray-400 sm:block">
+                      <p className="mt-0.5 hidden text-[10px] text-gray-400 dark:text-gray-600 sm:block">
                         {item.description}
                       </p>
                     </button>
@@ -290,11 +294,11 @@ export default function LoginPage() {
 
               {/* email */}
               <div>
-                <label htmlFor="email" className="mb-1.5 block text-xs font-semibold text-gray-700">
+                <label htmlFor="email" className="mb-1.5 block text-xs font-semibold text-gray-700 dark:text-gray-300">
                   Official email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-600" />
                   <input
                     id="email"
                     type="email"
@@ -302,7 +306,7 @@ export default function LoginPage() {
                     placeholder="your@email.gov.in"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(""); }}
-                    className="h-12 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    className="h-12 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500/20"
                   />
                 </div>
               </div>
@@ -310,15 +314,15 @@ export default function LoginPage() {
               {/* password */}
               <div>
                 <div className="mb-1.5 flex items-center justify-between">
-                  <label htmlFor="password" className="text-xs font-semibold text-gray-700">
+                  <label htmlFor="password" className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                     Password
                   </label>
-                  <Link href="/forgot-password" className="text-[11px] font-medium text-blue-600 hover:text-blue-800">
+                  <Link href="/forgot-password" className="text-[11px] font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                     Forgot password?
                   </Link>
                 </div>
                 <div className="relative">
-                  <LockKeyhole className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <LockKeyhole className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-600" />
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -326,12 +330,12 @@ export default function LoginPage() {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => { setPassword(e.target.value); setError(""); }}
-                    className="h-12 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-11 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    className="h-12 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-11 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500/20"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-300"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -346,11 +350,11 @@ export default function LoginPage() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 accent-blue-600"
+                    className="h-4 w-4 rounded border-gray-300 accent-blue-600 dark:border-gray-600"
                   />
-                  <span className="text-xs text-gray-500">Remember me</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Remember me</span>
                 </label>
-                <span className="flex items-center gap-1 text-[11px] font-medium text-emerald-600">
+                <span className="flex items-center gap-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
                   <ShieldCheck className="h-3.5 w-3.5" />
                   Secure
                 </span>
@@ -358,7 +362,7 @@ export default function LoginPage() {
 
               {/* error */}
               {error && (
-                <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600">
+                <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-xs text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
                   {error}
                 </div>
               )}
@@ -367,7 +371,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-500/20 transition hover:bg-blue-700 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-60"
+                className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-500/20 transition hover:bg-blue-700 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-60 dark:bg-blue-500 dark:hover:bg-blue-600"
               >
                 {loading ? (
                   <>
@@ -386,27 +390,27 @@ export default function LoginPage() {
 
             {/* divider */}
             <div className="my-6 flex items-center gap-3">
-              <div className="h-px flex-1 bg-gray-200" />
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">or</span>
-              <div className="h-px flex-1 bg-gray-200" />
+              <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600">or</span>
+              <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
             </div>
 
             {/* gov SSO */}
             <button
               type="button"
               onClick={handleGovernmentSSO}
-              className="flex h-11 w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+              className="flex h-11 w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-700"
             >
               <span className="text-lg">🇮🇳</span>
               Continue with Government SSO
             </button>
 
             {/* info notice */}
-            <div className="mt-6 flex gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
-              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" />
+            <div className="mt-6 flex gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-4 dark:border-blue-500/20 dark:bg-blue-500/10">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-blue-500 dark:text-blue-400" />
               <div>
-                <p className="text-xs font-semibold text-gray-800">Authorised access only</p>
-                <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
+                <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">Authorised access only</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-gray-500 dark:text-gray-500">
                   This platform is for authorised employees, trainers and administrators
                   of India's Official Statistical System.
                 </p>
@@ -414,11 +418,11 @@ export default function LoginPage() {
             </div>
 
             {/* footer note */}
-            <p className="mt-7 text-center text-[11px] leading-5 text-gray-400">
+            <p className="mt-7 text-center text-[11px] leading-5 text-gray-400 dark:text-gray-600">
               By signing in you agree to our{" "}
-              <Link href="/terms" className="font-medium text-gray-600 hover:text-blue-600">Terms</Link>
+              <Link href="/terms" className="font-medium text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">Terms</Link>
               {" "}and{" "}
-              <Link href="/privacy" className="font-medium text-gray-600 hover:text-blue-600">Privacy Policy</Link>.
+              <Link href="/privacy" className="font-medium text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">Privacy Policy</Link>.
             </p>
 
           </div>
